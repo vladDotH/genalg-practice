@@ -3,7 +3,7 @@ import random
 from src.model import Population
 
 
-# Отбор усечением (N выбирает особь из тех кто попал под threshold)
+# Отбор усечением (N раз выбирается особь из тех кто попал под threshold)
 def trunc(pop: Population, N: int, threshold: float) -> Population:
     return Population.list(
         pop.dists,
