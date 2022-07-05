@@ -14,25 +14,28 @@ from src.model.core import Population, Town
 class PopulationWidget(QWidget):
     def __init__(self):
         super().__init__()
-        lt = QVBoxLayout(self)
-        splitter = QSplitter(self)
-        splitter.setOrientation(Qt.Orientation.Vertical)
 
         self.list = QListWidget()
         self.canvas = FigureCanvas(Figure())
         navbar = NavigationToolbar(self.canvas, self)
 
+        splitter = QSplitter(self)
+        splitter.setOrientation(Qt.Orientation.Vertical)
         splitter.addWidget(self.list)
         splitter.addWidget(self.canvas)
+
+        lt = QVBoxLayout(self)
         lt.addWidget(splitter)
         lt.addWidget(navbar)
         self.setLayout(lt)
 
-        self.list.model()
+        # Установка слота на сигнал изменения выбранного элемента
         self.list.currentRowChanged.connect(self.drawSolution)
-        self.towns: list[Town] = None
-        self.pop: Population = None
 
+        self.towns: list[Town]
+        self.pop: Population
+
+    # Слот отрисовки выбранного решения
     def drawSolution(self):
         x = [self.towns[i].x for i in self.pop[self.list.currentRow()]]
         y = [self.towns[i].y for i in self.pop[self.list.currentRow()]]
@@ -40,6 +43,7 @@ class PopulationWidget(QWidget):
         self.canvas.figure.subplots().plot(list(x) + [x[0]], list(y) + [y[0]], linestyle='--', marker='o')
         self.canvas.draw()
 
+    # Установка отображаемой популяции
     def setPopulation(self, pop: Population, towns: list[Town]):
         self.towns = towns
         self.pop = pop
@@ -48,4 +52,6 @@ class PopulationWidget(QWidget):
         for i in pop:
             self.list.addItem(str(i))
 
-        self.list.item(pop.index(pop.min())).setBackground(QColor('lime'))
+        self.list.setCurrentRow(0)
+        # self.list.item(pop.index(pop.min())).setBackground(QColor('lime'))
+        # self.list.setCurrentRow(pop.index(pop.min()))
