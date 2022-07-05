@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
+from PyQt6.QtGui import *
 
 from matplotlib.backends.backend_qtagg import (
     FigureCanvasQTAgg as FigureCanvas,
@@ -46,3 +47,5 @@ class PopulationWidget(QWidget):
         self.canvas.figure.clf()
         for i in pop:
             self.list.addItem(str(i))
+
+        self.list.item(pop.index(pop.min())).setBackground(QColor('lime'))
