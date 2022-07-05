@@ -6,8 +6,9 @@ from src.model import *
 X = [-6, -4, 0, 5, 6, 3, 0, -4]
 Y = [0, -4, -6, -3, 1.5, 5.2, 6.2, 4.2]
 towns = [Town(x, y) for x, y in zip(X, Y)]
-print(f'Towns: {towns}\n')
+print(f'Города: {towns}\n')
 
+# Тестовая популяция
 ga = GA(towns, 15)
 
 qapp = QApplication.instance()

@@ -43,7 +43,7 @@ class Solution(list[int]):
         return Solution.list(self.dists, super().copy())
 
     def __str__(self) -> str:
-        return f'{{genome: {super().__repr__()}, F: {self.F()}, 1/F: {self.rF()}}}'
+        return f'{{genome: {super().__repr__()}, F: {self.F()}}}'
 
     def __repr__(self) -> str:
         return str(self)
