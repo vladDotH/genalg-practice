@@ -1,7 +1,10 @@
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
+
 from matplotlib.backends.backend_qtagg import (
-    FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+    FigureCanvasQTAgg as FigureCanvas,
+    NavigationToolbar2QT as NavigationToolbar
+)
 from matplotlib.figure import Figure
 
 from src.model.core import Population, Town
