@@ -11,9 +11,10 @@ from matplotlib.figure import Figure
 from src.model.core import Population, Town
 
 
-class PopulationWidget(QWidget):
-    def __init__(self):
+class PopulationWidget(QGroupBox):
+    def __init__(self, name: str):
         super().__init__()
+        self.setTitle(name)
 
         self.list = QListWidget()
         self.canvas = FigureCanvas(Figure())

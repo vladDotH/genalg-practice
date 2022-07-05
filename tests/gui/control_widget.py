@@ -1,4 +1,5 @@
 import sys
+from PyQt6.QtWidgets import *
 from src.gui import *
 
 qapp = QApplication.instance()

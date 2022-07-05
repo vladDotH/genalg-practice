@@ -24,10 +24,7 @@ class ControlWidget(QGroupBox):
         self.results = QPushButton(self)
         self.results.setText("Перейти к результату")
 
-        lt.addWidget(self.offspring)
-        lt.addWidget(self.mutate)
-        lt.addWidget(self.next)
-        lt.addWidget(self.forceNext)
-        lt.addWidget(self.results)
+        for w in [self.offspring, self.mutate, self.next, self.forceNext, self.results]:
+            lt.addWidget(w)
 
         self.setLayout(lt)

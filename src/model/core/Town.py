@@ -4,8 +4,8 @@ from __future__ import annotations
 # Представление города (вектор)
 class Town:
     def __init__(self, x: float, y: float):
-        self.x: float = x
-        self.y: float = y
+        self.x = x
+        self.y = y
 
     # Расстояние между двумя городами
     def dist(self, t: Town) -> float:
