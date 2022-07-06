@@ -11,8 +11,8 @@ def pmx(p1: Solution, p2: Solution, start: int, size: int) -> list[Solution, Sol
     # Хромосомы сдвигаются так чтобы рекомбинируемая аллель была вначале (удобно для вычислений)
     p1, p2 = p1.shift(-start), p2.shift(-start)
 
-    o1 = Solution.list(p1.dists, [-1] * N)
-    o2 = Solution.list(p2.dists, [-1] * N)
+    o1 = Solution(p1.dists, [-1] * N)
+    o2 = Solution(p2.dists, [-1] * N)
 
     # Обмен аллелями
     o2[0:size] = p1[0:size]
@@ -40,8 +40,8 @@ def ox(p1: Solution, p2: Solution, start: int, size: int) -> list[Solution, Solu
     # Хромосомы сдвигаются так чтобы рекомбинируемая аллель была вначале (удобно для вычислений)
     p1, p2, start = p1.shift(-start), p2.shift(-start), 0
 
-    o1 = Solution.list(p1.dists, [-1] * N)
-    o2 = Solution.list(p2.dists, [-1] * N)
+    o1 = Solution(p1.dists, [-1] * N)
+    o2 = Solution(p2.dists, [-1] * N)
 
     # Обмен аллелями
     o2[0:size] = p1[0:size]
@@ -70,8 +70,8 @@ def ox(p1: Solution, p2: Solution, start: int, size: int) -> list[Solution, Solu
 def cx(p1: Solution, p2: Solution, start=0) -> list[Solution, Solution]:
     N = len(p1)
 
-    o1 = Solution.list(p1.dists, [-1] * N)
-    o2 = Solution.list(p2.dists, [-1] * N)
+    o1 = Solution(p1.dists, [-1] * N)
+    o2 = Solution(p2.dists, [-1] * N)
 
     for o, p in zip([o1, o2], [[p1, p2], [p2, p1]]):
         g = start

@@ -9,8 +9,8 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 ga = GA(towns, 0)
 
 # Создадим особи искусственно
-p1 = Solution.list(ga.dists, [0, 4, 1, 8, 2, 7, 3, 5, 6])
-p2 = Solution.list(ga.dists, [0, 1, 3, 7, 6, 5, 2, 8, 4])
+p1 = Solution(ga.dists, [0, 4, 1, 8, 2, 7, 3, 5, 6])
+p2 = Solution(ga.dists, [0, 1, 3, 7, 6, 5, 2, 8, 4])
 
 # Родители
 print('Родители: ', p1, p2, sep='\n')

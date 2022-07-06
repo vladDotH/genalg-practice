@@ -13,7 +13,7 @@ class GA:
             for j in range(i, N):
                 self.dists[i][j] = self.dists[j][i] = towns[i].dist(towns[j])
 
-        self.population = Population.rand(self.dists, psize)
+        self.population = Population(self.dists, psize)
 
     def parentSelect(self):
         pass

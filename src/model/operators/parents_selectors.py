@@ -10,11 +10,11 @@ def panmixion(pop: Population) -> list[tuple[Solution, Solution]]:
 
 
 # Турнирный отбор: N раз выбирается лучшая особь из случайных tsize выбранных, далее применяется панмиксия
-def tournament(tsize: int, pop: Population) -> list[tuple[Solution, Solution]]:
+def tournament(pop: Population, tsize: int) -> list[tuple[Solution, Solution]]:
     return panmixion(
-        Population.list(
+        Population(
             pop.dists,
-            [Population.list(pop.dists, random.sample(pop, tsize)).min() for i in range(len(pop))]
+            [Population(pop.dists, random.sample(pop, tsize)).min() for i in range(len(pop))]
         )
     )
 
@@ -23,8 +23,8 @@ def tournament(tsize: int, pop: Population) -> list[tuple[Solution, Solution]]:
 def roulette(pop: Population) -> list[tuple[Solution, Solution]]:
     weights = [p.rF() for p in pop]
     return panmixion(
-        Population.list(
+        Population(
             pop.dists,
-            random.choices(pop, weights, k=len(pop))
+            Population(pop.dists, random.choices(pop, weights, k=len(pop)))
         )
     )

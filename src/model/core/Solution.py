@@ -1,30 +1,32 @@
 from __future__ import annotations
 import math
 import random
+from multipledispatch import dispatch
 
 import numpy as np
 
 
 # Класс особи
 class Solution(list[int]):
+    # Стандартный конструктор (пустая особь)
+    @dispatch(np.ndarray)
     def __init__(self, dists: np.ndarray):
         super().__init__()
         self.dists = dists
 
-    # Генерация случайного решения
-    @staticmethod
-    def rand(length: int, dists: np.ndarray) -> Solution:
-        sln = Solution(dists)
-        sln.extend(list(range(length)))
-        random.shuffle(sln)
-        return sln
+    # Конструктор со случайной генерацией особи
+    @dispatch(np.ndarray, int)
+    def __init__(self, dists: np.ndarray, length: int):
+        self.__init__(dists)
+        self.extend(list(range(length)))
+        random.shuffle(self)
 
-    # Приведение списка к особи
-    @staticmethod
-    def list(dists: np.ndarray, lst: list[int]) -> Solution:
-        pop = Solution(dists)
-        pop.extend(lst)
-        return pop
+    # Приведение обычного списка к особи
+    @dispatch(np.ndarray, list)
+    def __init__(self, dists: np.ndarray, lst: list[int]):
+        self.__init__(dists)
+        self.dists = dists
+        self.extend(lst)
 
     # Целевая функция (сумма длин весов рёбер графа)
     def F(self) -> float:
@@ -36,11 +38,11 @@ class Solution(list[int]):
 
     # Рекурсивный сдвиг решения (цикла графа)
     def shift(self, n: int) -> Solution:
-        return Solution.list(self.dists, list(np.roll(self, n)))
+        return Solution(self.dists, list(np.roll(self, n)))
 
     # Копия особи
     def copy(self) -> Solution:
-        return Solution.list(self.dists, super().copy())
+        return Solution(self.dists, super().copy())
 
     def __str__(self) -> str:
         return f'{{genome: {super().__repr__()}, F: {self.F()}}}'

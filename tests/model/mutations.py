@@ -9,7 +9,7 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 ga = GA(towns, 0)
 
 # Искусственно создадим особь
-p = Solution.list(ga.dists, [0, 1, 2, 3, 4])
+p = Solution(ga.dists, [0, 1, 2, 3, 4])
 
 # Исходная особь
 print('Исходная особь: ', p)

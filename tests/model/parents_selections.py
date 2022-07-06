@@ -15,7 +15,7 @@ print('Популяция:\n', ga.population, '\n')
 print('Панмиксия:', *panmixion(ga.population), '', sep='\n')
 
 # Пары полученные турнирным методом
-print('Турнирный отбор:', *tournament(2, ga.population), '', sep='\n')
+print('Турнирный отбор:', *tournament(ga.population, 2), '', sep='\n')
 
 # Пары полученные методом рулетки
 print('Рулетка:', *roulette(ga.population), sep='\n')
