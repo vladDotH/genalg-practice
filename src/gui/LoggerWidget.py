@@ -17,5 +17,5 @@ class LoggerWidget(QGroupBox):
         self.setLayout(lt)
 
     # Вывод лога в виджет (можно использовать в качестве слота для логгера из util.Logger)
-    def print(self, s):
+    def print(self, s) -> None:
         self.text.append(s)

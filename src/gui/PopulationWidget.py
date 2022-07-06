@@ -40,7 +40,7 @@ class PopulationWidget(QGroupBox):
         self.list.currentRowChanged.connect(self.drawSolution)
 
     # Слот отрисовки выбранного решения
-    def drawSolution(self):
+    def drawSolution(self) -> None:
         x = [self.towns[i].x for i in self.pop[self.list.currentRow()]]
         y = [self.towns[i].y for i in self.pop[self.list.currentRow()]]
 
@@ -53,7 +53,7 @@ class PopulationWidget(QGroupBox):
         self.canvas.draw()
 
     # Установка отображаемой популяции
-    def setPopulation(self, pop: Population, towns: list[Town]):
+    def setPopulation(self, pop: Population, towns: list[Town]) -> None:
         self.towns = towns
         self.pop = pop
         self.list.clear()

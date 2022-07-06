@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Callable
 from PyQt6.QtCore import pyqtSignal, QObject
 import threading
@@ -14,21 +15,21 @@ class Logger(QObject):
             super().__init__()
 
     @staticmethod
-    def _get():
+    def _get() -> Logger:
         if Logger._instance is None:
             Logger._instance = Logger()
         return Logger._instance
 
     # Функция логгирования, выпускает сигнал со строкой лога (обработчик получит её в слот)
     @staticmethod
-    def log(msg: str):
+    def log(msg: str) -> None:
         Logger._lock.acquire()
         Logger._get().logSignal.emit(msg)
         Logger._lock.release()
 
     # Присоединение слота обработчиков
     @staticmethod
-    def connect(slot: Callable[[str], None]):
+    def connect(slot: Callable[[str], None]) -> None:
         Logger._lock.acquire()
         Logger._get().logSignal.connect(slot)
         Logger._lock.release()
