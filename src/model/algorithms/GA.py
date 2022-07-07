@@ -12,41 +12,44 @@ from src.model.core.Population import Population
 class GA:
     class Params:
         def __init__(self):
-            # Размер популяции
+            # Настраиваемые параметры
             self.psize = None
-            # Вероятность рекомбинации
+            self.maxGen = None
             self.rprob = None
-            # Вероятность мутации
             self.mprob = None
-            # Размер турнира (для турнирного отбора)
             self.tsize = None
-            # Начало аллели кроссинговера
+            self.threshold = None
+            # Генерируемые параметры
             self.cstart = None
-            # Размер аллели кроссинговера
             self.csize = None
-            # Гены для мутации
             self.mgen1 = None
             self.mgen2 = None
-            # Граница выбора (для отбора усечением)
-            self.threshold = None
+
+        def __str__(self):
+            return f'Размер популяции: {self.psize}\n' \
+                   f'Максимальное кол-во поколений: {self.maxGen}\n' \
+                   f'Вероятность кроссинговера: {self.rprob}\n' \
+                   f'Вероятность мутаци: {self.mprob}\n' \
+                   f'Размер турнира (турнирный отбор): {self.tsize}\n' \
+                   f'Граница отбора (отбор усечением): {self.threshold}'
 
     def __init__(
             self,
             towns: list[Town],
-            psize: int,
             pSelector: Callable[[Population, GA], list[tuple[Solution, Solution]]] = None,
             recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]] = None,
             mutationer: Callable[[Solution, GA], Solution] = None,
             oSelector: Callable[[Population, GA], Population] = None
     ):
-        self.startSize = psize
         self.reg = Region(towns)
-        self.population = Population(self.reg, psize)
         self.params = GA.Params()
         self.pSelector = pSelector
         self.recombinator = recombinator
         self.mutationer = mutationer
         self.oSelector = oSelector
+
+    def start(self):
+        self.population = Population(self.reg, self.params.psize)
 
     def parentSelect(self):
         pass

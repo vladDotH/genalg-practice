@@ -44,7 +44,7 @@ class Solution(list[int]):
         return Solution(self.reg, super().copy())
 
     def __str__(self) -> str:
-        return f'{{genome: {super().__repr__()}, F: {self.F()}}}'
+        return f'{{хромосома: {super().__repr__()}, F: {self.F()}}}'
 
     def __repr__(self) -> str:
         return str(self)

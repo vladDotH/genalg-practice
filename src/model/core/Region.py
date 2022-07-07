@@ -14,8 +14,8 @@ class Region(list[Town]):
                 self.dists[i][j] = self.dists[j][i] = towns[i].dist(towns[j])
 
     def __str__(self) -> str:
-        return f'Towns: {super().__repr__()}\n' \
-               f'Dists:\n {self.dists}'
+        return f'Города: {super().__repr__()}\n' \
+               f'Расстояния:\n {self.dists}'
 
     def __repr__(self) -> str:
         return str(self)
