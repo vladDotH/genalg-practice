@@ -6,7 +6,6 @@ from src.model.core.Town import Town
 class InputDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-
         self.setWindowTitle("Ввод данных")
 
         self.count = QSpinBox(self)
@@ -20,7 +19,6 @@ class InputDialog(QDialog):
 
         clbl = QLabel('Количество городов:')
         tlbl = QLabel('Координаты')
-
         lt = QVBoxLayout()
         lt.addWidget(clbl)
         lt.addWidget(self.count)
@@ -28,14 +26,9 @@ class InputDialog(QDialog):
         lt.addWidget(self.table)
         lt.addWidget(self.btn)
         self.setLayout(lt)
-        self.count.valueChanged.connect(self.countChanged)
-        self.towns: list[Town] = []
 
-    def countChanged(self, val):
-        self.table.setRowCount(val)
-        # for i in range(val):
-        #     self.table.setItem(i, 0, QTableWidgetItem())
-        #     self.table.setItem(i, 1, QTableWidgetItem())
+        self.count.valueChanged.connect(self.table.setRowCount)
+        self.towns: list[Town] = []
 
     def ret(self):
         i = 0

@@ -6,7 +6,9 @@ Y = [0, 2, 4, 5, 3.14]
 towns = [Town(x, y) for x, y in zip(X, Y)]
 
 # Инициализация ГА
-ga = GA(towns, 15)
+ga = GA()
+ga.params.psize = 15
+ga.start(Region(towns))
 
 # Начальная популяция (для примера будем проводить отбор из начальной популяции)
 print('Популяция:', ga.population, sep='\n')

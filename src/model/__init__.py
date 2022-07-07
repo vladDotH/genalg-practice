@@ -1,6 +1,7 @@
 from src.model.core.Town import Town
 from src.model.core.Solution import Solution
 from src.model.core.Population import Population
+from src.model.core.Region import Region
 from src.model.operators.parents_selectors import (panmixion, tournament, roulette)
 from src.model.operators.recombinators import (pmx, ox, cx)
 from src.model.operators.mutationers import (swap, insert, inverse)

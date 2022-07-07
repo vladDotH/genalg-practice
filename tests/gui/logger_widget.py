@@ -17,13 +17,13 @@ pw.show()
 Logger.connect(pw.print)
 
 # Вывод логов
-for i in range(25):
+for i in range(10):
     Logger.log(f'sample log №{i}')
 
 
 # Вывод логов из других потоков
 def thr_f(n):
-    for i in range(25):
+    for i in range(5):
         Logger.log(f'Thread {n} log №{i}')
         time.sleep(0.1)
 

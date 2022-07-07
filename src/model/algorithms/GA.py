@@ -1,7 +1,5 @@
 from __future__ import annotations
 from typing import Callable
-import numpy as np
-from multipledispatch import dispatch
 
 from src.model.core.Town import Town
 from src.model.core.Region import Region
@@ -35,37 +33,37 @@ class GA:
 
     def __init__(
             self,
-            towns: list[Town],
             pSelector: Callable[[Population, GA], list[tuple[Solution, Solution]]] = None,
             recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]] = None,
             mutationer: Callable[[Solution, GA], Solution] = None,
             oSelector: Callable[[Population, GA], Population] = None
     ):
-        self.reg = Region(towns)
         self.params = GA.Params()
         self.pSelector = pSelector
         self.recombinator = recombinator
         self.mutationer = mutationer
         self.oSelector = oSelector
+        self.reg: Region = None
 
-    def start(self):
+    def start(self, reg: Region) -> None:
+        self.reg = reg
         self.population = Population(self.reg, self.params.psize)
 
-    def parentSelect(self):
+    def parentsSelect(self) -> None:
         pass
 
-    def crossover(self):
+    def crossover(self) -> None:
         pass
 
-    def mutation(self):
+    def mutation(self) -> None:
         pass
 
-    def offspringSelect(self):
+    def offspringSelect(self) -> None:
         pass
 
-    def newPopulation(self):
+    def newPopulation(self) -> None:
         pass
 
-    def checkParam(self, attr: str):
+    def checkParam(self, attr: str) -> None:
         if not hasattr(self.params, attr):
             raise AttributeError(f'GA has not parameter {attr}')

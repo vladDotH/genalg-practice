@@ -9,7 +9,9 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 print(f'Города: {towns}\n')
 
 # Тестовая популяция
-ga = GA(towns, 25)
+ga = GA()
+ga.params.psize = 25
+ga.start(Region(towns))
 
 qapp = QApplication.instance()
 if not qapp:

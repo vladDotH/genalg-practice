@@ -6,7 +6,9 @@ Y = [0, 2, 4, 5, 3.14, 1, 10, 11, 12]
 towns = [Town(x, y) for x, y in zip(X, Y)]
 
 # Инициализация ГА (особи не генерируеются)
-ga = GA(towns, 0)
+ga = GA()
+ga.params.psize = 0
+ga.start(Region(towns))
 
 # Создадим особи искусственно
 p1 = Solution(ga.reg, [0, 4, 1, 8, 2, 7, 3, 5, 6])
