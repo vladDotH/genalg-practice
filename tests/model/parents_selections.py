@@ -9,13 +9,14 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 ga = GA(towns, 5)
 
 # Начальная популяция
-print('Популяция:\n', ga.population, '\n')
+print('Популяция:', ga.population, '', sep='\n')
 
 # Пары полученные панмиксией
 print('Панмиксия:', *panmixion(ga.population), '', sep='\n')
 
+ga.params.tsize = 2
 # Пары полученные турнирным методом
-print('Турнирный отбор:', *tournament(ga.population, 2), '', sep='\n')
+print('Турнирный отбор:', *tournament(ga.population, ga), '', sep='\n')
 
 # Пары полученные методом рулетки
 print('Рулетка:', *roulette(ga.population), sep='\n')

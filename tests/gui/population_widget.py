@@ -9,7 +9,7 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 print(f'Города: {towns}\n')
 
 # Тестовая популяция
-ga = GA(towns, 15)
+ga = GA(towns, 25)
 
 qapp = QApplication.instance()
 if not qapp:
@@ -18,6 +18,6 @@ if not qapp:
 pw = PopulationWidget('Test')
 pw.show()
 
-pw.setPopulation(ga.population, towns)
+pw.setPopulation(ga.population)
 
 qapp.exec()

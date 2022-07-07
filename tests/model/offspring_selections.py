@@ -9,13 +9,16 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 ga = GA(towns, 15)
 
 # Начальная популяция (для примера будем проводить отбор из начальной популяции)
-print('Популяция:', ga.population)
+print('Популяция:', ga.population, sep='\n')
 print()
 
+ga.params.threshold = 0.5
+ga.params.psize = 5
+
 # Отбор усечением
-print('Отбор усечением: ', trunc(ga.population, 5, 0.5))
+print('Отбор усечением: ', trunc(ga.population, ga))
 print()
 
 # Элитарный отбор
-print('Элитарный отбор: ', elite(ga.population, 5))
+print('Элитарный отбор: ', elite(ga.population, ga))
 print()

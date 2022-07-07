@@ -24,7 +24,7 @@ for i in range(25):
 # Вывод логов из других потоков
 def thr_f(n):
     for i in range(25):
-        Logger.log(f'Daemon {n} log №{i}')
+        Logger.log(f'Thread {n} log №{i}')
         time.sleep(0.1)
 
 

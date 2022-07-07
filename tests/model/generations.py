@@ -4,16 +4,15 @@ from src.model import *
 X = [1, 2, 3, 10, 2.73]
 Y = [0, 2, 4, 5, 3.14]
 towns = [Town(x, y) for x, y in zip(X, Y)]
-print(f'Города: {towns}\n')
 
 # Инициализация ГА
 ga = GA(towns, 5)
 
 # Матрица весов
-print('Матрица расстояний:\n', ga.dists, '\n')
+print('Регион:', ga.reg, '', sep='\n')
 
 # Начальная популяция
-print('Популяция:\n', ga.population, '\n')
+print('Популяция:\n', ga.population, '', sep='\n')
 
 # Лучшее решение (особь)
 print('Особь с минимальной длиной: ', (ga.population.min()), '\n')

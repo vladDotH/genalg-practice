@@ -1,1 +1,1 @@
-from src.util.Logger import *
+from src.util.Logger import Logger

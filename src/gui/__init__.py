@@ -1,4 +1,4 @@
-from src.gui.PopulationWidget import *
-from src.gui.ControlWidget import *
-from src.gui.LoggerWidget import *
+from src.gui.PopulationWidget import PopulationWidget
+from src.gui.ControlWidget import ControlWidget
+from src.gui.LoggerWidget import LoggerWidget
 from src.gui.MainWindow import MainWindow

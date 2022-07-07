@@ -1,13 +1,11 @@
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
-from PyQt6.QtGui import *
 
 from matplotlib.backends.backend_qtagg import (
     FigureCanvasQTAgg as FigureCanvas,
     NavigationToolbar2QT as NavigationToolbar
 )
 from matplotlib.figure import Figure
-
 from src.model.core import Population, Town
 
 
@@ -21,7 +19,6 @@ class PopulationWidget(QGroupBox):
         self.plt = self.canvas.figure.subplots()
         # Линия пути
         self.line = None
-        self.towns: list[Town] = None
         self.pop: Population = None
 
         navbar = NavigationToolbar(self.canvas, self)
@@ -41,8 +38,8 @@ class PopulationWidget(QGroupBox):
 
     # Слот отрисовки выбранного решения
     def drawSolution(self) -> None:
-        x = [self.towns[i].x for i in self.pop[self.list.currentRow()]]
-        y = [self.towns[i].y for i in self.pop[self.list.currentRow()]]
+        x = [self.pop.reg[i].x for i in self.pop[self.list.currentRow()]]
+        y = [self.pop.reg[i].y for i in self.pop[self.list.currentRow()]]
 
         # Если путь не отрисован, рисуется. Иначе просто меняются точки
         if self.line is None:
@@ -53,16 +50,18 @@ class PopulationWidget(QGroupBox):
         self.canvas.draw()
 
     # Установка отображаемой популяции
-    def setPopulation(self, pop: Population, towns: list[Town]) -> None:
-        self.towns = towns
+    def setPopulation(self, pop: Population) -> None:
         self.pop = pop
         self.list.clear()
         for i in pop:
             self.list.addItem(str(i))
 
         # Подписи номеров к городам
-        for i in range(len(self.towns)):
-            self.plt.annotate(i, (self.towns[i].x, self.towns[i].y), textcoords="offset points", xytext=(4, 4))
+        for i in range(len(self.pop.reg)):
+            self.plt.annotate(
+                i, (self.pop.reg[i].x, self.pop.reg[i].y),
+                textcoords="offset points", xytext=(4, 4)
+            )
         self.line = None
         self.list.setCurrentRow(0)
 

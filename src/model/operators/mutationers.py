@@ -1,24 +1,26 @@
-from src.model import Solution
 import random
+from src.model import Solution
+from src.model.algorithms.GA import GA
 
 
 # Мутация обменом (два гена меняются местами)
-def swap(o: Solution, start: int = 0, end: int = None) -> Solution:
-    if end is None:
-        end = len(o)
+def swap(o: Solution, ga: GA) -> Solution:
+    for a in ['mgen1', 'mgen2']:
+        ga.checkParam(a)
+    i, j = ga.params.mgen1, ga.params.mgen2
+
     co = o.copy()
-    a, b = (random.randint(start, end - 1) for i in range(2))
-    co[a], co[b] = co[b], co[a]
+    co[i], co[j] = co[j], co[i]
     return co
 
 
 # Мутация вставкой (выбранный ген перемещается к другому)
-def insert(o: Solution, start: int = 0, end: int = None) -> Solution:
-    if end is None:
-        end = len(o)
-    co = o.copy()
-    i, j = sorted(random.randint(start, end - 1) for i in range(2))
+def insert(o: Solution, ga: GA) -> Solution:
+    for a in ['mgen1', 'mgen2']:
+        ga.checkParam(a)
+    i, j = ga.params.mgen1, ga.params.mgen2
 
+    co = o.copy()
     if i != j:
         dir = random.randint(0, 1)
         if dir == 0:
@@ -34,10 +36,11 @@ def insert(o: Solution, start: int = 0, end: int = None) -> Solution:
 
 
 # Мутация инверсией (инверсия генов между двумя генами)
-def inverse(o: Solution, start: int = 0, end: int = None) -> Solution:
-    if end is None:
-        end = len(o)
+def inverse(o: Solution, ga: GA) -> Solution:
+    for a in ['mgen1', 'mgen2']:
+        ga.checkParam(a)
+    i, j = ga.params.mgen1, ga.params.mgen2
+
     co = o.copy()
-    i, j = sorted(random.randint(start, end - 1) for i in range(2))
     co[i:j + 1] = reversed(co[i:j + 1])
     return co

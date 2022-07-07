@@ -1,8 +1,8 @@
-from src.model.core.Town import *
-from src.model.core.Solution import *
-from src.model.core.Population import *
-from src.model.operators.parents_selectors import *
-from src.model.operators.recombinators import *
-from src.model.operators.mutationers import *
-from src.model.operators.offspring_selectors import *
-from src.model.algorithms.GA import *
+from src.model.core.Town import Town
+from src.model.core.Solution import Solution
+from src.model.core.Population import Population
+from src.model.operators.parents_selectors import (panmixion, tournament, roulette)
+from src.model.operators.recombinators import (pmx, ox, cx)
+from src.model.operators.mutationers import (swap, insert, inverse)
+from src.model.operators.offspring_selectors import (trunc, elite)
+from src.model.algorithms.GA import GA
