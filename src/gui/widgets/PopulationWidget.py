@@ -49,10 +49,17 @@ class PopulationWidget(QGroupBox):
 
         self.canvas.draw()
 
+    def clear(self) -> None:
+        self.list.clear()
+        self.canvas.figure.clf()
+        self.canvas.draw()
+        self.plt = self.canvas.figure.subplots()
+
     # Установка отображаемой популяции
     def setPopulation(self, pop: Population) -> None:
+        self.clear()
+
         self.pop = pop
-        self.list.clear()
         for i in pop:
             self.list.addItem(str(i))
 

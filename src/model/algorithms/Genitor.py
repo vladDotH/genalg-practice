@@ -22,6 +22,8 @@ class Genitor(GA):
 
     def crossover(self) -> None:
         self.children = Population(self.reg)
+        self.params.cstart = random.randint(0, len(self.reg) - 1)
+        self.params.csize = random.randint(1, len(self.reg) - 2)
         self.children.append(
             self.recombinator(
                 self.parents[0][0], self.parents[0][1], self
@@ -32,20 +34,23 @@ class Genitor(GA):
         self.mutChildren = Population(self.reg)
         c = self.children[0]
         if random.random() < self.params.mprob:
+            self.params.mgen1, self.params.mgen2 = sorted([random.randint(0, len(self.reg) - 1) for i in range(2)])
             self.mutChildren.append(self.mutationer(c, self))
         else:
             self.mutChildren.append(c)
 
     def offspringSelect(self) -> None:
-        pass
-        # self.offspring = Population(self.reg)
-        # self.offspring.extend(self.population)
-        # self.offspring.extend(self.mutChildren)
-        # self.nextPopulation = self.oSelector(self.offspring, self)
+        self.offspring = Population(self.reg)
+        self.offspring.extend(self.population)
+        self.offspring[self.offspring.index(self.offspring.max())] = self.mutChildren[0]
 
     def newPopulation(self) -> None:
-        self.population = self.nextPopulation
+        super().newPopulation()
+        self.population = self.offspring
         self.parents = self.children = self.mutChildren = self.offspring = None
 
-    def checkParam(self, attr: str) -> None:
-        super().checkParam(attr)
+    def __str__(self):
+        return 'Генитор:\n' + super().__str__()
+
+    def __repr__(self):
+        return str(self)

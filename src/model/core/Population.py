@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import numpy as np
 from multipledispatch import dispatch
 from src.model.core.Solution import Solution
 from src.model.core.Region import Region
@@ -26,6 +28,22 @@ class Population(list[Solution]):
     # Получение лучшей особи (минимального по длине цикла)
     def min(self) -> Solution:
         return min(self, key=lambda x: x.F())
+
+    # Худшая особь
+    def max(self) -> Solution:
+        return max(self, key=lambda x: x.F())
+
+    # Среднее значение целевой функции
+    def meanF(self) -> float:
+        return np.mean([x.F() for x in self])
+
+    # Среднее значение обратной к целевой ф.
+    def meanrF(self) -> float:
+        return np.mean([x.rF() for x in self])
+
+    # Нормализация всех особей
+    def normalized(self) -> Population:
+        return Population(self.reg, [i.normalized() for i in self])
 
     # Копия популяции
     def copy(self) -> Population:

@@ -43,18 +43,19 @@ class GA:
         self.mutationer = mutationer
         self.oSelector = oSelector
         self.params = GA.Params()
+        self.gen = 0
 
         self.reg: Region = None
         self.population: Population = None
         self.parents: list[tuple[Solution, Solution]] = None
         self.children: Population = None
         self.mutChildren: Population = None
+        self.tempPop: Population = None
         self.offspring: Population = None
-        self.nextPopulation: Population = None
 
     def start(self, reg: Region) -> None:
         self.reg = reg
-        self.population = Population(self.reg, self.params.psize)
+        self.population = Population(self.reg, self.params.psize).normalized()
 
     def parentsSelect(self) -> None:
         pass
@@ -69,8 +70,25 @@ class GA:
         pass
 
     def newPopulation(self) -> None:
-        pass
+        self.gen += 1
+
+    def nextGeneration(self) -> None:
+        self.parentsSelect()
+        self.crossover()
+        self.mutation()
+        self.offspringSelect()
+        self.newPopulation()
 
     def checkParam(self, attr: str) -> None:
         if not hasattr(self.params, attr):
             raise AttributeError(f'GA has not parameter {attr}')
+
+    def __str__(self):
+        return f'Оператор выбора родителей: {self.pSelector}\n' \
+               f'Оператор рекомбинации: {self.recombinator}\n' \
+               f'Оператор мутации: {self.mutationer}\n' \
+               f'Оператор отбора: {self.oSelector}\n' \
+               + str(self.params)
+
+    def __repr__(self):
+        return str(self)

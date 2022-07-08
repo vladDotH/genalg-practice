@@ -39,6 +39,10 @@ class Solution(list[int]):
     def shift(self, n: int) -> Solution:
         return Solution(self.reg, list(np.roll(self, n)))
 
+    # Сдивиг цикла, чтобы он начинался с нуля
+    def normalized(self) -> Solution:
+        return self.shift(-self.index(0))
+
     # Копия особи
     def copy(self) -> Solution:
         return Solution(self.reg, super().copy())

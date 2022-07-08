@@ -24,6 +24,8 @@ class ClassicGA(GA):
         self.children = Population(self.reg)
         for p in self.parents:
             if random.random() < self.params.rprob:
+                self.params.cstart = random.randint(0, len(self.reg) - 1)
+                self.params.csize = random.randint(1, len(self.reg) - 2)
                 self.children.extend(self.recombinator(p[0], p[1], self))
             else:
                 self.children.extend(p)
@@ -32,19 +34,24 @@ class ClassicGA(GA):
         self.mutChildren = Population(self.reg)
         for c in self.children:
             if random.random() < self.params.mprob:
+                self.params.mgen1, self.params.mgen2 = sorted([random.randint(0, len(self.reg) - 1) for i in range(2)])
                 self.mutChildren.append(self.mutationer(c, self))
             else:
                 self.mutChildren.append(c)
 
     def offspringSelect(self) -> None:
-        self.offspring = Population(self.reg)
-        self.offspring.extend(self.population)
-        self.offspring.extend(self.mutChildren)
-        self.nextPopulation = self.oSelector(self.offspring, self)
+        self.tempPop = Population(self.reg)
+        self.tempPop.extend(self.population)
+        self.tempPop.extend(self.mutChildren)
+        self.offspring = self.oSelector(self.tempPop, self)
 
     def newPopulation(self) -> None:
-        self.population = self.nextPopulation
-        self.parents = self.children = self.mutChildren = self.offspring = None
+        super().newPopulation()
+        self.population = self.offspring
+        self.parents = self.children = self.mutChildren = self.tempPop = self.offspring = None
 
-    def checkParam(self, attr: str) -> None:
-        super().checkParam(attr)
+    def __str__(self):
+        return 'Классический ГА:\n' + super().__str__()
+
+    def __repr__(self):
+        return str(self)
