@@ -148,14 +148,15 @@ class SettingsDialog(QDialog):
 
         self.psize.valueChanged.connect(lambda v: setattr(self.params, 'psize', v))
         self.maxGen.valueChanged.connect(lambda v: setattr(self.params, 'maxGen', v))
-        self.rprob.valueChanged.connect(lambda v: setattr(self.params, 'rprob', v))
-        self.mprob.valueChanged.connect(lambda v: setattr(self.params, 'mprob', v))
+        self.rprob.valueChanged.connect(lambda v: setattr(self.params, 'rprob', v / 100))
+        self.mprob.valueChanged.connect(lambda v: setattr(self.params, 'mprob', v / 100))
         self.tsize.valueChanged.connect(lambda v: setattr(self.params, 'tsize', v))
-        self.threshold.valueChanged.connect(lambda v: setattr(self.params, 'threshold', v))
+        self.threshold.valueChanged.connect(lambda v: setattr(self.params, 'threshold', v / 100))
 
         for sb in [self.rprob, self.mprob, self.threshold]:
             sb.setMinimum(0)
             sb.setMaximum(100)
+        self.maxGen.setMaximum(10 ** 6)
 
         box = QGroupBox("Параметры")
         lt = QVBoxLayout()
@@ -198,8 +199,8 @@ class SettingsDialog(QDialog):
         self.swap.toggle()
         self.trunc.toggle()
         # Значения по умолчанию (spin box)
-        self.psize.setValue(20)
-        self.maxGen.setValue(30)
+        self.psize.setValue(10)
+        self.maxGen.setValue(50)
         self.rprob.setValue(80)
         self.mprob.setValue(5)
         self.tsize.setValue(2)

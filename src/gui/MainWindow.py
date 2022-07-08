@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
         self.offspring = PopulationWidget('Потомки')
         self.mutations = PopulationWidget('Мутации')
         self.logger = LoggerWidget()
+        Logger.connect(self.logger.print)
         self.control = ControlWidget()
 
         self.control.mutate.setEnabled(False)
@@ -99,21 +100,26 @@ class MainWindow(QMainWindow):
             return
 
         self.ga.parentsSelect()
+        Logger.log(f'Выбраны родители:\n{self.ga.parents}\n')
         self.ga.crossover()
         self.offspring.setPopulation(self.ga.children.sorted().normalized())
         self.control.offspring.setEnabled(False)
         self.control.forceNext.setEnabled(False)
         self.control.results.setEnabled(False)
         self.control.mutate.setEnabled(True)
+        Logger.log(f'Полученные потомки:\n{self.ga.children}\n')
 
     def onMutate(self):
         self.ga.mutation()
+        Logger.log(f'Потомки с мутациями:\n{self.ga.mutChildren}\n')
         self.mutations.setPopulation(self.ga.mutChildren.sorted().normalized())
         self.control.mutate.setEnabled(False)
         self.control.next.setEnabled(True)
 
     def onNext(self):
         self.ga.offspringSelect()
+        Logger.log(f'Промежуточная популяция:\n{self.ga.tempPop}\n')
+        Logger.log(f'Новая популяция:\n{self.ga.offspring}\n')
         self.ga.newPopulation()
         self.parents.setPopulation(self.ga.population.sorted().normalized())
         self.offspring.clear()
@@ -136,7 +142,7 @@ class MainWindow(QMainWindow):
             self.ga.nextGeneration()
 
         self.parents.setPopulation(self.ga.population.sorted().normalized())
-        self.parents.list.item(0).setBackground(QColor('green'))
+        self.parents.list.item(0).setBackground(QColor('lime'))
 
     def onInput(self):
         d = InputDialog()
@@ -145,6 +151,7 @@ class MainWindow(QMainWindow):
             self.reg = Region(d.towns)
             print(self.reg)
             self.statusBar().showMessage('Данные введены')
+            Logger.log(f'Введены данные:\n{self.reg}\n')
 
     def onFile(self):
         d = QFileDialog.getOpenFileName(self, 'Выбрать файл с данными')
@@ -153,6 +160,7 @@ class MainWindow(QMainWindow):
                 reg = Region(file_input(d[0]))
                 self.reg = reg
                 self.statusBar().showMessage(f'Данные введены из файла {d[0]}')
+                Logger.log(f'Введены данные:\n{self.reg}\n')
             except FileNotFoundError:
                 msg = QMessageBox(
                     QMessageBox.Icon(QMessageBox.Icon.Critical),
@@ -175,6 +183,7 @@ class MainWindow(QMainWindow):
             self.ga = d.gaType(d.pSelector, d.recombinator, d.mutationer, d.oSelector)
             self.ga.params = d.params
             self.statusBar().showMessage(f'Настройки применены')
+            Logger.log(f'Текущие настройки ГА:\n{self.ga}\n')
 
     def onStart(self):
         print(self.reg, self.ga)
@@ -183,6 +192,7 @@ class MainWindow(QMainWindow):
         self.ga.start(self.reg)
         self.ga.gen = 0
         self.parents.setPopulation(self.ga.population.sorted().normalized())
+        Logger.log(f'Cгенерирована популяция:\n{self.ga.population.sorted().normalized()}\n')
 
     def onInfo(self):
         pass
