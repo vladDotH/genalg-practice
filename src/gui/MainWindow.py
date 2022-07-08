@@ -194,5 +194,12 @@ class MainWindow(QMainWindow):
         self.parents.setPopulation(self.ga.population.sorted().normalized())
         Logger.log(f'Cгенерирована популяция:\n{self.ga.population.sorted().normalized()}\n')
 
+        for w in [self.control.offspring, self.control.forceNext, self.control.results]:
+            w.setEnabled(True)
+        for w in [self.control.mutate, self.control.next]:
+            w.setEnabled(False)
+        self.offspring.clear()
+        self.mutations.clear()
+
     def onInfo(self):
         pass
