@@ -149,7 +149,6 @@ class MainWindow(QMainWindow):
         res = d.exec()
         if res:
             self.reg = Region(d.towns)
-            print(self.reg)
             self.statusBar().showMessage('Данные введены')
             Logger.log(f'Введены данные:\n{self.reg}\n')
 
@@ -186,7 +185,6 @@ class MainWindow(QMainWindow):
             Logger.log(f'Текущие настройки ГА:\n{self.ga}\n')
 
     def onStart(self):
-        print(self.reg, self.ga)
         if not self.checkSetup():
             return
         self.ga.start(self.reg)
