@@ -27,7 +27,7 @@ class GA:
             return f'Размер популяции: {self.psize}\n' \
                    f'Максимальное кол-во поколений: {self.maxGen}\n' \
                    f'Вероятность кроссинговера: {self.rprob}\n' \
-                   f'Вероятность мутаци: {self.mprob}\n' \
+                   f'Вероятность мутации: {self.mprob}\n' \
                    f'Размер турнира (турнирный отбор): {self.tsize}\n' \
                    f'Граница отбора (отбор усечением): {self.threshold}'
 
@@ -38,12 +38,19 @@ class GA:
             mutationer: Callable[[Solution, GA], Solution] = None,
             oSelector: Callable[[Population, GA], Population] = None
     ):
-        self.params = GA.Params()
         self.pSelector = pSelector
         self.recombinator = recombinator
         self.mutationer = mutationer
         self.oSelector = oSelector
+        self.params = GA.Params()
+
         self.reg: Region = None
+        self.population: Population = None
+        self.parents: list[tuple[Solution, Solution]] = None
+        self.children: Population = None
+        self.mutChildren: Population = None
+        self.offspring: Population = None
+        self.nextPopulation: Population = None
 
     def start(self, reg: Region) -> None:
         self.reg = reg

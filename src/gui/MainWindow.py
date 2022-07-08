@@ -1,9 +1,9 @@
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 
-from src.gui.LoggerWidget import LoggerWidget
-from src.gui.ControlWidget import ControlWidget
-from src.gui.PopulationWidget import PopulationWidget
+from src.gui.widgets.LoggerWidget import LoggerWidget
+from src.gui.widgets.ControlWidget import ControlWidget
+from src.gui.widgets.PopulationWidget import PopulationWidget
 
 
 class MainWindow(QMainWindow):
