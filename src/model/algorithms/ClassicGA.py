@@ -50,8 +50,8 @@ class ClassicGA(GA):
         self.population = self.offspring
         self.parents = self.children = self.mutChildren = self.tempPop = self.offspring = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'Классический ГА:\n' + super().__str__()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)

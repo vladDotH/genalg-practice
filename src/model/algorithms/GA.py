@@ -83,12 +83,12 @@ class GA:
         if not hasattr(self.params, attr):
             raise AttributeError(f'GA has not parameter {attr}')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'Оператор выбора родителей: {self.pSelector}\n' \
                f'Оператор рекомбинации: {self.recombinator}\n' \
                f'Оператор мутации: {self.mutationer}\n' \
                f'Оператор отбора: {self.oSelector}\n' \
                + str(self.params)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)

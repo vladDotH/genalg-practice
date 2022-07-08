@@ -1,10 +1,8 @@
 from typing import Callable
-import random
 
 from src.model.algorithms.ClassicGA import ClassicGA
 from src.model.algorithms.GA import GA
 from src.model.core.Population import Population
-from src.model.core.Region import Region
 from src.model.core.Solution import Solution
 from src.model.operators.parents_selectors import panmixion
 
@@ -27,8 +25,8 @@ class InterBalance(ClassicGA):
             [i for i in self.tempPop if i.F() <= mean]
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'ГА промежуточного равновесия:\n' + super().__str__()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)

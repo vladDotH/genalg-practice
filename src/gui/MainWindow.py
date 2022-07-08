@@ -100,7 +100,7 @@ class MainWindow(QMainWindow):
             return
 
         self.ga.parentsSelect()
-        Logger.log(f'Выбраны родители:\n{self.ga.parents}\n')
+        Logger.log('Выбраны родители:\n' + '\n'.join(map(str, self.ga.parents)))
         self.ga.crossover()
         self.offspring.setPopulation(self.ga.children.sorted().normalized())
         self.control.offspring.setEnabled(False)

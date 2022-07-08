@@ -30,7 +30,7 @@ class InputDialog(QDialog):
         self.count.valueChanged.connect(self.table.setRowCount)
         self.towns: list[Town] = []
 
-    def ret(self):
+    def ret(self) -> None:
         i = 0
         try:
             self.towns.clear()
