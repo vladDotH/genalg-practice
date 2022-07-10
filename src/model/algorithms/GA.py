@@ -1,7 +1,5 @@
 from __future__ import annotations
 from typing import Callable
-
-from src.model.core.Town import Town
 from src.model.core.Region import Region
 from src.model.core.Solution import Solution
 from src.model.core.Population import Population

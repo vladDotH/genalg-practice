@@ -2,30 +2,39 @@ from typing import Type, Callable
 from PyQt6.QtWidgets import *
 
 from src.model import *
+from src.util import Logger
 
 
 class SettingsDialog(QDialog):
-    def _onGA(self, state: bool, gaType: Type[GA]):
-        if gaType is Genitor or gaType is InterBalance:
+    # Обработка кнопок выбора ГА
+    def _onGA(self, state: bool, gaType: Type[GA]) -> None:
+        if state:
+            self.gaType = gaType
+
+        if gaType is Genitor:
+            # Выключаем/выключаем уникальность кнопок в группах (операторы выборов родителей и потомков)
             self.psGroup.setExclusive(not state)
             self.osGroup.setExclusive(not state)
+            # Выключаем кнопки
             if state:
                 for rb in [self.panmixion, self.tournament, self.roulette, self.trunc, self.elite]:
                     if rb.isChecked():
                         rb.setChecked(False)
+            # Включаем кнопки по муолчанию
             if not state:
                 self.panmixion.toggle()
                 self.trunc.toggle()
-
+            # Вкл/Выкл группы кнопок
             self.psBox.setEnabled(not state)
             self.osBox.setEnabled(not state)
 
-        if state:
-            self.gaType = gaType
-            if gaType is InterBalance:
+        if gaType is InterBalance:
+            if state:
                 self.panmixion.setChecked(True)
+            self.psBox.setEnabled(not state)
 
-    def _initGA(self):
+    # Инициализация блока кнопок выбора ГА
+    def _initGA(self) -> None:
         self.classic = QRadioButton('Классический ГА')
         self.genitor = QRadioButton('Генитор')
         self.interbalance = QRadioButton('Прер. Равновесия')
@@ -41,13 +50,16 @@ class SettingsDialog(QDialog):
         self.gaBox.setLayout(lt)
         self.lt.addWidget(self.gaBox)
 
-    def _onPS(self, state: bool, pSelector: Callable[[Population, GA], list[tuple[Solution, Solution]]]):
+    # Обработка кнопок выбора оператора выбора родителей
+    def _onPS(self, state: bool, pSelector: Callable[[Population, GA], list[tuple[Solution, Solution]]]) -> None:
         if state:
             self.pSelector = pSelector
         if pSelector is tournament:
+            # Включаем размер турнира если выбран турнирый метод
             self.tsize.setEnabled(state)
 
-    def _initPS(self):
+    # Инициализация блока кнопок выбора оператора выбора родителей
+    def _initPS(self) -> None:
         self.panmixion = QRadioButton('Панмиксия')
         self.tournament = QRadioButton('Турнир')
         self.roulette = QRadioButton('Рулетка')
@@ -65,11 +77,13 @@ class SettingsDialog(QDialog):
         self.psBox.setLayout(lt)
         self.lt.addWidget(self.psBox)
 
-    def _onRCMB(self, state: bool, recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]]):
+    # Обработка кнопок выбора оператора рекомбинации
+    def _onRCMB(self, state: bool, recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]]) -> None:
         if state:
             self.recombinator = recombinator
 
-    def _initRCMB(self):
+    # Инициализация блока кнопок выбора оператора рекомбинации
+    def _initRCMB(self) -> None:
         self.pmx = QRadioButton('PMX')
         self.ox = QRadioButton('OX')
         self.cx = QRadioButton('CX')
@@ -85,11 +99,13 @@ class SettingsDialog(QDialog):
         self.rcmbBox.setLayout(lt)
         self.lt.addWidget(self.rcmbBox)
 
-    def _onMT(self, state: bool, mutationer: Callable[[Solution, GA], Solution]):
+    # Обработка кнопок выбора оператора мутации
+    def _onMT(self, state: bool, mutationer: Callable[[Solution, GA], Solution]) -> None:
         if state:
             self.mutationer = mutationer
 
-    def _initMT(self):
+    # Инициализация блока кнопок выбора оператора мутации
+    def _initMT(self) -> None:
         self.swap = QRadioButton('Обмен')
         self.insert = QRadioButton('Вставка')
         self.inverse = QRadioButton('Инверсия')
@@ -105,13 +121,16 @@ class SettingsDialog(QDialog):
         self.mtBox.setLayout(lt)
         self.lt.addWidget(self.mtBox)
 
-    def _onOS(self, state: bool, oSelector: Callable[[Population, GA], Population]):
+    # Обработка кнопок выбора оператора выбора потомков
+    def _onOS(self, state: bool, oSelector: Callable[[Population, GA], Population]) -> None:
         if state:
             self.oSelector = oSelector
         if oSelector is trunc:
+            # Включаем порог отбора если выбран отбор усечением
             self.threshold.setEnabled(state)
 
-    def _initOS(self):
+    # Инициализация блока кнопок выбора оператора выбора потомков
+    def _initOS(self) -> None:
         self.trunc = QRadioButton('Отбор усечением')
         self.elite = QRadioButton('Элитарный отбор')
 
@@ -127,7 +146,8 @@ class SettingsDialog(QDialog):
         self.osBox.setLayout(lt)
         self.lt.addWidget(self.osBox)
 
-    def _initParams(self):
+    # Инициализация блока числовых параметров
+    def _initParams(self) -> None:
         labels = [
             QLabel('Размер популяции'),
             QLabel('Максимальное поколение'),
@@ -157,6 +177,8 @@ class SettingsDialog(QDialog):
             sb.setMinimum(0)
             sb.setMaximum(100)
         self.maxGen.setMaximum(10 ** 6)
+        self.psize.setMaximum(10 ** 3)
+        self.tsize.setMaximum(10 ** 3)
 
         box = QGroupBox("Параметры")
         lt = QVBoxLayout()
@@ -182,6 +204,11 @@ class SettingsDialog(QDialog):
         self.oSelector = None
         self.params = GA.Params()
 
+        self.subResult = 0
+        sbLbl = QLabel('Промежуток отображения популяции (при вычислении результата)')
+        self.subResultSB = QSpinBox()
+        self.subResultSB.valueChanged.connect(lambda v: setattr(self, 'subResult', v))
+
         self.lt = QVBoxLayout()
         self._initGA()
         self._initPS()
@@ -189,6 +216,8 @@ class SettingsDialog(QDialog):
         self._initMT()
         self._initOS()
         self._initParams()
+        self.lt.addWidget(sbLbl)
+        self.lt.addWidget(self.subResultSB)
         self.lt.addWidget(self.btn)
         self.setLayout(self.lt)
 
@@ -205,6 +234,49 @@ class SettingsDialog(QDialog):
         self.mprob.setValue(5)
         self.tsize.setValue(2)
         self.threshold.setValue(50)
+        self.subResultSB.setValue(5)
 
-    def ret(self):
+        self.cfgFile = 'config'
+        # Загрузка настроек из файла (если настрока есть - значние по умолчанию перезаписывается, иначе оно остаётся)
+        self.load()
+
+    def ret(self) -> None:
+        self.save()
         self.accept()
+
+    def load(self) -> None:
+        try:
+            with open(self.cfgFile, 'r') as f:
+                for line in f:
+                    data = line.split()
+                    if len(data) == 1:
+                        name = data[0]
+                        getattr(self, name).toggle()
+                    elif len(data) == 2:
+                        name = data[0]
+                        val = float(data[1])
+                        if type(getattr(self, name)) is QSpinBox:
+                            val = int(val)
+                        getattr(self, name).setValue(val)
+        except Exception as e:
+            Logger.log(f'Ошибка чтения настроек: {e}\n')
+
+    def save(self) -> None:
+        try:
+            with open(self.cfgFile, 'w') as f:
+                for box in [
+                    ['classic', 'genitor', 'interbalance'],
+                    ['panmixion', 'tournament', 'roulette'],
+                    ['pmx', 'ox', 'cx'],
+                    ['swap', 'insert', 'inverse'],
+                    ['trunc', 'elite'],
+                ]:
+                    for op in box:
+                        if getattr(self, op).isChecked():
+                            f.write(f'{op}\n')
+
+                for sb in ['psize', 'maxGen', 'rprob', 'mprob', 'tsize', 'threshold', 'subResultSB']:
+                    f.write(f'{sb} {getattr(self, sb).value()}\n')
+
+        except Exception as e:
+            Logger.log(f'Ошибка записи настроек: {e}\n')

@@ -1,5 +1,4 @@
 from typing import Callable
-
 from src.model.algorithms.ClassicGA import ClassicGA
 from src.model.algorithms.GA import GA
 from src.model.core.Population import Population
@@ -12,21 +11,20 @@ class InterBalance(ClassicGA):
                  recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]] = None,
                  mutationer: Callable[[Solution, GA], Solution] = None,
                  oSelector: Callable[[Population, GA], Population] = None):
-        super().__init__(panmixion, recombinator, mutationer, None)
-        self.params.maxExpandCoef = 10
+        super().__init__(panmixion, recombinator, mutationer, oSelector)
+        self.maxExpandCoef = 3 ** 3
 
     def offspringSelect(self) -> None:
-        self.tempPop = Population(self.reg)
-        self.tempPop.extend(self.population)
-        self.tempPop.extend(self.mutChildren)
-        mean = self.tempPop.meanF()
-        self.offspring = Population(
-            self.reg,
-            [i for i in self.tempPop if i.F() <= mean]
-        )
-        # Если размер популяции вырос в maxExpandCoef раз, урезаем её до начального
-        if len(self.offspring) > self.params.psize * self.params.maxExpandCoef:
-            self.offspring = Population(self.reg, self.offspring.sorted()[:self.params.psize])
+        self.tempPop = Population(self.reg, self.population + self.mutChildren)
+        # Если размер популяции вырос в maxExpandCoef раз, урезаем её до начального размера выбранным оператором отбора
+        if len(self.tempPop) > self.params.psize * self.maxExpandCoef:
+            self.offspring = self.oSelector(self.tempPop, self)
+        else:
+            mean = self.tempPop.meanF()
+            self.offspring = Population(
+                self.reg,
+                [i for i in self.tempPop if i.F() <= mean]
+            )
 
     def __str__(self) -> str:
         return 'ГА промежуточного равновесия:\n' + super().__str__()

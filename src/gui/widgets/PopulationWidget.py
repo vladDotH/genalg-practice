@@ -1,3 +1,4 @@
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 
@@ -52,8 +53,8 @@ class PopulationWidget(QGroupBox):
     def clear(self) -> None:
         self.list.clear()
         self.canvas.figure.clf()
-        self.canvas.draw()
         self.plt = self.canvas.figure.subplots()
+        self.canvas.draw()
 
     # Установка отображаемой популяции
     def setPopulation(self, pop: Population) -> None:
@@ -71,6 +72,6 @@ class PopulationWidget(QGroupBox):
             )
         self.line = None
         self.list.setCurrentRow(0)
-
-        # self.list.item(pop.index(pop.min())).setBackground(QColor('lime'))
-        # self.list.setCurrentRow(pop.index(pop.min()))
+        m = pop.index(pop.min())
+        self.list.item(m).setBackground(QColor('lime'))
+        self.list.setCurrentRow(m)

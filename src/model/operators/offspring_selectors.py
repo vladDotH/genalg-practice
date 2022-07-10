@@ -7,10 +7,11 @@ from src.model.algorithms.GA import GA
 def trunc(pop: Population, ga: GA) -> Population:
     for a in ['psize', 'threshold']:
         ga.checkParam(a)
+    threshold = ga.params.threshold if ga.params.threshold < 1 else 1
     return Population(
         pop.reg,
         random.choices(
-            pop.sorted()[:int(len(pop) * ga.params.threshold) + 1], k=ga.params.psize
+            pop.sorted()[:int(len(pop) * threshold) + 1], k=ga.params.psize
         )
     )
 

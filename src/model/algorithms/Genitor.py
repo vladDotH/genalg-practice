@@ -1,6 +1,5 @@
 from typing import Callable
 import random
-
 from src.model.algorithms.GA import GA
 from src.model.core.Population import Population
 from src.model.core.Region import Region

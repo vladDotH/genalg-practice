@@ -57,6 +57,7 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage('Введите данные')
         self.ga: GA = None
         self.reg: Region = None
+        self.subResult = 1
 
         self.control.offspring.clicked.connect(self.onChildren)
         self.control.mutate.clicked.connect(self.onMutate)
@@ -64,95 +65,106 @@ class MainWindow(QMainWindow):
         self.control.forceNext.clicked.connect(self.onForceNext)
         self.control.results.clicked.connect(self.onResults)
 
-    def checkSetup(self):
+    def checkSetup(self) -> bool:
         if self.reg is None:
-            msg = QMessageBox(
+            QMessageBox(
                 QMessageBox.Icon(QMessageBox.Icon.Critical),
                 'Ошибка',
                 f'Не введены данные'
-            )
-            msg.exec()
+            ).exec()
             return False
         if self.ga is None:
-            msg = QMessageBox(
+            QMessageBox(
                 QMessageBox.Icon(QMessageBox.Icon.Critical),
                 'Ошибка',
                 f'Алгоритм не настроен'
-            )
-            msg.exec()
+            ).exec()
             return False
-
         return True
 
-    def checkGenerated(self):
+    def checkGenerated(self) -> bool:
         if self.ga.population is None:
-            msg = QMessageBox(
+            QMessageBox(
                 QMessageBox.Icon(QMessageBox.Icon.Critical),
                 'Ошибка',
                 f'Популяция не сгенерирована'
-            )
-            msg.exec()
+            ).exec()
             return False
         return True
 
-    def onChildren(self):
+    def onChildren(self) -> None:
         if not self.checkSetup() or not self.checkGenerated():
             return
-
         self.ga.parentsSelect()
         Logger.log('Выбраны родители:\n' + '\n'.join(map(str, self.ga.parents)))
         self.ga.crossover()
-        self.offspring.setPopulation(self.ga.children.sorted().normalized())
+        self.offspring.setPopulation(self.ga.children)
         self.control.offspring.setEnabled(False)
         self.control.forceNext.setEnabled(False)
         self.control.results.setEnabled(False)
         self.control.mutate.setEnabled(True)
         Logger.log(f'Полученные потомки:\n{self.ga.children}\n')
 
-    def onMutate(self):
+    def onMutate(self) -> None:
         self.ga.mutation()
         Logger.log(f'Потомки с мутациями:\n{self.ga.mutChildren}\n')
-        self.mutations.setPopulation(self.ga.mutChildren.sorted().normalized())
+        self.mutations.setPopulation(self.ga.mutChildren)
         self.control.mutate.setEnabled(False)
         self.control.next.setEnabled(True)
 
-    def onNext(self):
+    def onNext(self) -> None:
         self.ga.offspringSelect()
         Logger.log(f'Промежуточная популяция:\n{self.ga.tempPop}\n')
         Logger.log(f'Новая популяция:\n{self.ga.offspring}\n')
         self.ga.newPopulation()
-        self.parents.setPopulation(self.ga.population.sorted().normalized())
+        self.parents.setPopulation(self.ga.population)
         self.offspring.clear()
         self.mutations.clear()
         for b in [self.control.offspring, self.control.forceNext, self.control.results]:
             b.setEnabled(True)
         self.control.next.setEnabled(False)
 
-    def onForceNext(self):
+    def onForceNext(self) -> None:
         if not self.checkSetup() or not self.checkGenerated():
             return
         self.ga.nextGeneration()
-        self.parents.setPopulation(self.ga.population.sorted().normalized())
+        self.parents.setPopulation(self.ga.population)
 
-    def onResults(self):
+    def wait(self):
+        self.setEnabled(False)
+        QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
+        self.statusBar().showMessage("Алгоритм выполняется...")
+
+    def resume(self):
+        self.setEnabled(True)
+        QApplication.restoreOverrideCursor()
+        self.statusBar().showMessage("Выполнение завершено")
+
+    def onResults(self) -> None:
         if not self.checkSetup() or not self.checkGenerated():
             return
 
+        self.wait()
         while self.ga.gen < self.ga.params.maxGen:
+            minS = self.ga.population.min()
             self.ga.nextGeneration()
+            if self.ga.gen % self.subResult == 0 and minS.F() != self.ga.population.min().F():
+                QApplication.processEvents()
+                self.parents.setPopulation(self.ga.population)
 
-        self.parents.setPopulation(self.ga.population.sorted().normalized())
-        self.parents.list.item(0).setBackground(QColor('lime'))
+        self.parents.setPopulation(self.ga.population.sorted())
+        self.resume()
 
-    def onInput(self):
+    def onInput(self) -> None:
         d = InputDialog()
         res = d.exec()
         if res:
             self.reg = Region(d.towns)
             self.statusBar().showMessage('Данные введены')
             Logger.log(f'Введены данные:\n{self.reg}\n')
+            self.setDefault()
 
-    def onFile(self):
+    def onFile(self) -> None:
         d = QFileDialog.getOpenFileName(self, 'Выбрать файл с данными')
         if d[0] != '':
             try:
@@ -160,44 +172,50 @@ class MainWindow(QMainWindow):
                 self.reg = reg
                 self.statusBar().showMessage(f'Данные введены из файла {d[0]}')
                 Logger.log(f'Введены данные:\n{self.reg}\n')
+                self.setDefault()
             except FileNotFoundError:
-                msg = QMessageBox(
+                QMessageBox(
                     QMessageBox.Icon(QMessageBox.Icon.Critical),
                     'Ошибка',
                     f'Файл {d[0]} не найден'
-                )
-                msg.exec()
+                ).exec()
             except ValueError:
-                msg = QMessageBox(
+                QMessageBox(
                     QMessageBox.Icon(QMessageBox.Icon.Critical),
                     'Ошибка',
                     f'Некорректные данные в файле {d[0]}'
-                )
-                msg.exec()
+                ).exec()
 
-    def onSettings(self):
+    def onSettings(self) -> None:
         d = SettingsDialog()
         res = d.exec()
         if res:
             self.ga = d.gaType(d.pSelector, d.recombinator, d.mutationer, d.oSelector)
             self.ga.params = d.params
+            self.subResult = d.subResult
             self.statusBar().showMessage(f'Настройки применены')
             Logger.log(f'Текущие настройки ГА:\n{self.ga}\n')
+            self.setDefault()
 
-    def onStart(self):
+    def onStart(self) -> None:
         if not self.checkSetup():
             return
+        self.setDefault()
         self.ga.start(self.reg)
         self.ga.gen = 0
-        self.parents.setPopulation(self.ga.population.sorted().normalized())
-        Logger.log(f'Cгенерирована популяция:\n{self.ga.population.sorted().normalized()}\n')
+        self.parents.setPopulation(self.ga.population.sorted())
+        Logger.log(f'Cгенерирована популяция:\n{self.ga.population.sorted()}\n')
 
+    def onInfo(self) -> None:
+        pass
+
+    def setDefault(self) -> None:
         for w in [self.control.offspring, self.control.forceNext, self.control.results]:
             w.setEnabled(True)
         for w in [self.control.mutate, self.control.next]:
             w.setEnabled(False)
+        if self.ga is not None:
+            self.ga.population = None
+        self.parents.clear()
         self.offspring.clear()
         self.mutations.clear()
-
-    def onInfo(self):
-        pass
