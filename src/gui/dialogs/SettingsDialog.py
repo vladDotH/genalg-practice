@@ -207,6 +207,7 @@ class SettingsDialog(QDialog):
         self.subResult = 0
         sbLbl = QLabel('Промежуток отображения популяции (при вычислении результата)')
         self.subResultSB = QSpinBox()
+        self.subResultSB.setMaximum(10 ** 6)
         self.subResultSB.valueChanged.connect(lambda v: setattr(self, 'subResult', v))
 
         self.lt = QVBoxLayout()

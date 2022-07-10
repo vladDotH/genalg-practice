@@ -145,12 +145,14 @@ class MainWindow(QMainWindow):
             return
 
         self.wait()
+        minS = self.ga.population.min()
         while self.ga.gen < self.ga.params.maxGen:
-            minS = self.ga.population.min()
             self.ga.nextGeneration()
+            QApplication.processEvents()
             if self.ga.gen % self.subResult == 0 and minS.F() != self.ga.population.min().F():
-                QApplication.processEvents()
+                minS = self.ga.population.min()
                 self.parents.setPopulation(self.ga.population)
+                self.statusBar().showMessage(f'Поколение: {self.ga.gen}')
 
         self.parents.setPopulation(self.ga.population.sorted())
         self.resume()
