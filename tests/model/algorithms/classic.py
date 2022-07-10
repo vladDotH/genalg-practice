@@ -10,10 +10,12 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 
 ga = ClassicGA(panmixion, ox, inverse, trunc)
 ga.params.psize = 10
-ga.params.rprob = 0.95
-ga.params.mprob = 0.05
+ga.params.rprob = 0.90
+ga.params.mprob = 0.1
 ga.params.maxGen = 50
 ga.params.threshold = 0.5
+ga.params.minR = 0.4
+ga.params.maxR = 0.6
 ga.start(Region(towns))
 print(ga)
 

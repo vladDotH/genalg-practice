@@ -24,9 +24,9 @@ class ClassicGA(GA):
         for p in self.parents:
             if random.random() < self.params.rprob:
                 # Генерация начала аллели кроссинговера
-                self.params.cstart = random.randint(0, len(self.reg) - 1)
+                self.params.cstart = random.randint(0, self.N - 1)
                 # Генерация размера аллели (от 1 до N-1, т.к. при значения 0 и N изменений не будет)
-                self.params.csize = random.randint(1, len(self.reg) - 1)
+                self.params.csize = random.randint(int(self.N * self.params.minR), int(self.N * self.params.maxR))
                 self.children.extend(self.recombinator(p[0], p[1], self))
             else:
                 self.children.extend(p)
@@ -35,7 +35,7 @@ class ClassicGA(GA):
         self.mutChildren = Population(self.reg)
         for c in self.children:
             if random.random() < self.params.mprob:
-                self.params.mgen1, self.params.mgen2 = sorted([random.randint(0, len(self.reg) - 1) for i in range(2)])
+                self.params.mgen1, self.params.mgen2 = sorted([random.randint(0, self.N - 1) for i in range(2)])
                 self.mutChildren.append(self.mutationer(c, self))
             else:
                 self.mutChildren.append(c)

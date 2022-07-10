@@ -20,12 +20,12 @@ class MainWindow(QMainWindow):
         popSplitter = QSplitter(self)
         infoSplitter = QSplitter(self)
 
-        self.parents = PopulationWidget('Популяция')
-        self.offspring = PopulationWidget('Потомки')
-        self.mutations = PopulationWidget('Мутации')
-        self.logger = LoggerWidget()
+        self.parents = PopulationWidget('Популяция', self)
+        self.offspring = PopulationWidget('Потомки', self)
+        self.mutations = PopulationWidget('Мутации', self)
+        self.logger = LoggerWidget(self)
         Logger.connect(self.logger.print)
-        self.control = ControlWidget()
+        self.control = ControlWidget(self)
 
         self.control.mutate.setEnabled(False)
         self.control.next.setEnabled(False)
@@ -96,26 +96,26 @@ class MainWindow(QMainWindow):
         if not self.checkSetup() or not self.checkGenerated():
             return
         self.ga.parentsSelect()
-        Logger.log('Выбраны родители:\n' + '\n'.join(map(str, self.ga.parents)))
+        Logger.log('Выбраны родители:\n' + '\n'.join(map(str, self.ga.parents)), LogLevel.Info)
         self.ga.crossover()
         self.offspring.setPopulation(self.ga.children)
         self.control.offspring.setEnabled(False)
         self.control.forceNext.setEnabled(False)
         self.control.results.setEnabled(False)
         self.control.mutate.setEnabled(True)
-        Logger.log(f'Полученные потомки:\n{self.ga.children}\n')
+        Logger.log(f'Полученные потомки:\n{self.ga.children}\n', LogLevel.Info)
 
     def onMutate(self) -> None:
         self.ga.mutation()
-        Logger.log(f'Потомки с мутациями:\n{self.ga.mutChildren}\n')
+        Logger.log(f'Потомки с мутациями:\n{self.ga.mutChildren}\n', LogLevel.Info)
         self.mutations.setPopulation(self.ga.mutChildren)
         self.control.mutate.setEnabled(False)
         self.control.next.setEnabled(True)
 
     def onNext(self) -> None:
         self.ga.offspringSelect()
-        Logger.log(f'Промежуточная популяция:\n{self.ga.tempPop}\n')
-        Logger.log(f'Новая популяция:\n{self.ga.offspring}\n')
+        Logger.log(f'Промежуточная популяция:\n{self.ga.tempPop}\n', LogLevel.Info)
+        Logger.log(f'Новая популяция:\n{self.ga.offspring}\n', LogLevel.Info)
         self.ga.newPopulation()
         self.parents.setPopulation(self.ga.population)
         self.offspring.clear()
@@ -130,12 +130,12 @@ class MainWindow(QMainWindow):
         self.ga.nextGeneration()
         self.parents.setPopulation(self.ga.population)
 
-    def wait(self):
+    def wait(self) -> None:
         self.setEnabled(False)
         QApplication.setOverrideCursor(QCursor(Qt.CursorShape.WaitCursor))
         self.statusBar().showMessage("Алгоритм выполняется...")
 
-    def resume(self):
+    def resume(self) -> None:
         self.setEnabled(True)
         QApplication.restoreOverrideCursor()
         self.statusBar().showMessage("Выполнение завершено")
@@ -145,25 +145,25 @@ class MainWindow(QMainWindow):
             return
 
         self.wait()
-        minS = self.ga.population.min()
+        minSln = self.ga.population.min()
         while self.ga.gen < self.ga.params.maxGen:
             self.ga.nextGeneration()
             QApplication.processEvents()
-            if self.ga.gen % self.subResult == 0 and minS.F() != self.ga.population.min().F():
-                minS = self.ga.population.min()
+            if self.ga.gen % self.subResult == 0 and minSln.F() != self.ga.population.min().F():
+                minSln = self.ga.population.min()
                 self.parents.setPopulation(self.ga.population)
-                self.statusBar().showMessage(f'Поколение: {self.ga.gen}')
+                self.statusBar().showMessage(f'Алгоритм выполняется... Поколение: {self.ga.gen}')
 
         self.parents.setPopulation(self.ga.population.sorted())
         self.resume()
 
     def onInput(self) -> None:
-        d = InputDialog()
+        d = InputDialog(self)
         res = d.exec()
         if res:
             self.reg = Region(d.towns)
             self.statusBar().showMessage('Данные введены')
-            Logger.log(f'Введены данные:\n{self.reg}\n')
+            Logger.log(f'Введены данные:\n{self.reg}\n', LogLevel.Info)
             self.setDefault()
 
     def onFile(self) -> None:
@@ -173,15 +173,17 @@ class MainWindow(QMainWindow):
                 reg = Region(file_input(d[0]))
                 self.reg = reg
                 self.statusBar().showMessage(f'Данные введены из файла {d[0]}')
-                Logger.log(f'Введены данные:\n{self.reg}\n')
+                Logger.log(f'Введены данные:\n{self.reg}\n', LogLevel.Info)
                 self.setDefault()
             except FileNotFoundError:
+                Logger.log(f'Файл {d[0]} не найден', LogLevel.Warn)
                 QMessageBox(
                     QMessageBox.Icon(QMessageBox.Icon.Critical),
                     'Ошибка',
                     f'Файл {d[0]} не найден'
                 ).exec()
             except ValueError:
+                Logger.log(f'Некорректные данные в файле {d[0]}', LogLevel.Warn)
                 QMessageBox(
                     QMessageBox.Icon(QMessageBox.Icon.Critical),
                     'Ошибка',
@@ -189,14 +191,14 @@ class MainWindow(QMainWindow):
                 ).exec()
 
     def onSettings(self) -> None:
-        d = SettingsDialog()
+        d = SettingsDialog(self)
         res = d.exec()
         if res:
             self.ga = d.gaType(d.pSelector, d.recombinator, d.mutationer, d.oSelector)
             self.ga.params = d.params
             self.subResult = d.subResult
             self.statusBar().showMessage(f'Настройки применены')
-            Logger.log(f'Текущие настройки ГА:\n{self.ga}\n')
+            Logger.log(f'Текущие настройки ГА:\n{self.ga}\n', LogLevel.Info)
             self.setDefault()
 
     def onStart(self) -> None:
@@ -206,7 +208,7 @@ class MainWindow(QMainWindow):
         self.ga.start(self.reg)
         self.ga.gen = 0
         self.parents.setPopulation(self.ga.population.sorted())
-        Logger.log(f'Cгенерирована популяция:\n{self.ga.population.sorted()}\n')
+        Logger.log(f'Cгенерирована популяция:\n{self.ga.population.sorted()}\n', LogLevel.Info)
 
     def onInfo(self) -> None:
         pass

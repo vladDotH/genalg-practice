@@ -9,6 +9,10 @@ def swap(o: Solution, ga: GA) -> Solution:
         ga.checkParam(a)
     i, j = ga.params.mgen1, ga.params.mgen2
 
+    N = len(o)
+    if i < 0 or j < 0 or i > N - 1 or j > N - 1:
+        raise ValueError('Incorrect gens indices')
+
     co = o.copy()
     co[i], co[j] = co[j], co[i]
     return co
@@ -18,7 +22,11 @@ def swap(o: Solution, ga: GA) -> Solution:
 def insert(o: Solution, ga: GA) -> Solution:
     for a in ['mgen1', 'mgen2']:
         ga.checkParam(a)
-    i, j = ga.params.mgen1, ga.params.mgen2
+    i, j = sorted([ga.params.mgen1, ga.params.mgen2])
+
+    N = len(o)
+    if i < 0 or j < 0 or i > N - 1 or j > N - 1:
+        raise ValueError('Incorrect gens indices')
 
     co = o.copy()
     if i != j:
@@ -39,7 +47,11 @@ def insert(o: Solution, ga: GA) -> Solution:
 def inverse(o: Solution, ga: GA) -> Solution:
     for a in ['mgen1', 'mgen2']:
         ga.checkParam(a)
-    i, j = ga.params.mgen1, ga.params.mgen2
+    i, j = sorted([ga.params.mgen1, ga.params.mgen2])
+
+    N = len(o)
+    if i < 0 or j < 0 or i > N - 1 or j > N - 1:
+        raise ValueError('Incorrect gens indices')
 
     co = o.copy()
     co[i:j + 1] = reversed(co[i:j + 1])

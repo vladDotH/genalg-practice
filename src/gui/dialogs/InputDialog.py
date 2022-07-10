@@ -41,12 +41,11 @@ class InputDialog(QDialog):
                 self.towns.append(Town(float(x.text()), float(y.text())))
 
         except (ValueError, TypeError):
-            msg = QMessageBox(
+            QMessageBox(
                 QMessageBox.Icon(QMessageBox.Icon.Critical),
                 'Ошибка',
                 f'Некорректые данные в ряду: {i + 1}'
-            )
-            msg.exec()
+            ).exec()
             return
 
         self.accept()

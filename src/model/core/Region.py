@@ -15,7 +15,8 @@ class Region(list[Town]):
 
     def __str__(self) -> str:
         return f'Города: {super().__repr__()}\n' \
-               f'Расстояния:\n {self.dists}'
+               f'Расстояния:\n' + \
+               "\n".join(['[' + '\t'.join(['{:.5g}'.format(j) for j in i]) + ']' for i in self.dists])
 
     def __repr__(self) -> str:
         return str(self)

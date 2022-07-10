@@ -7,7 +7,11 @@ from src.model.algorithms.GA import GA
 def trunc(pop: Population, ga: GA) -> Population:
     for a in ['psize', 'threshold']:
         ga.checkParam(a)
-    threshold = ga.params.threshold if ga.params.threshold < 1 else 1
+    threshold = ga.params.threshold
+
+    if threshold < 0 or threshold > 1:
+        raise ValueError('Incorrect threshold params')
+
     return Population(
         pop.reg,
         random.choices(

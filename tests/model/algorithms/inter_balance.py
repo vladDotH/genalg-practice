@@ -11,7 +11,9 @@ towns = [Town(x, y) for x, y in zip(X, Y)]
 ga = InterBalance(None, ox, swap, elite)
 ga.params.psize = 10
 ga.params.rprob = 0.9
-ga.params.mprob = 0.1
+ga.params.mprob = 0.05
+ga.params.minR = 0.4
+ga.params.maxR = 0.6
 ga.params.maxGen = 10
 ga.start(Region(towns))
 

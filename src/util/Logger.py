@@ -2,13 +2,14 @@ from __future__ import annotations
 from typing import Callable
 from PyQt6.QtCore import pyqtSignal, QObject
 import threading
+from src.util.LogLevel import LogLevel
 
 
 # Логгер-синглтон
 class Logger(QObject):
     _instance = None
     _lock = threading.Lock()
-    logSignal = pyqtSignal(str)
+    logSignal = pyqtSignal(str, LogLevel)
 
     def __init__(self):
         if Logger._instance is None:
@@ -22,9 +23,9 @@ class Logger(QObject):
 
     # Функция логгирования, выпускает сигнал со строкой лога (обработчик получит её в слот)
     @staticmethod
-    def log(msg: str) -> None:
+    def log(msg: str, lvl: LogLevel = LogLevel.Debug) -> None:
         Logger._lock.acquire()
-        Logger._get().logSignal.emit(msg)
+        Logger._get().logSignal.emit(msg, lvl)
         Logger._lock.release()
 
     # Присоединение слота обработчиков

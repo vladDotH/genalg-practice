@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import *
 
 from src.model import *
 from src.util import Logger
+from src.util import LogLevel
 
 
 class SettingsDialog(QDialog):
@@ -146,12 +147,20 @@ class SettingsDialog(QDialog):
         self.osBox.setLayout(lt)
         self.lt.addWidget(self.osBox)
 
+    def onParam(self, name: str, val: int | float) -> None:
+        setattr(self.params, name, val)
+        self.maxR.setMinimum(self.minR.value())
+        self.minR.setMaximum(self.maxR.value())
+        self.tsize.setMaximum(self.psize.value())
+
     # Инициализация блока числовых параметров
     def _initParams(self) -> None:
         labels = [
             QLabel('Размер популяции'),
             QLabel('Максимальное поколение'),
             QLabel('Вероятность кроссинговера (%)'),
+            QLabel('Минимальный размер аллели рекомбинации (%)'),
+            QLabel('Максимальный размер аллели рекомбинации (%)'),
             QLabel('Вероятность мутации (%)'),
             QLabel('Размер турнира'),
             QLabel('Порог отбора (%)'),
@@ -159,6 +168,8 @@ class SettingsDialog(QDialog):
         self.psize = QSpinBox()
         self.maxGen = QSpinBox()
         self.rprob = QDoubleSpinBox()
+        self.minR = QDoubleSpinBox()
+        self.maxR = QDoubleSpinBox()
         self.mprob = QDoubleSpinBox()
         self.tsize = QSpinBox()
         self.threshold = QDoubleSpinBox()
@@ -166,23 +177,25 @@ class SettingsDialog(QDialog):
         self.tsize.setEnabled(False)
         self.threshold.setEnabled(False)
 
-        self.psize.valueChanged.connect(lambda v: setattr(self.params, 'psize', v))
-        self.maxGen.valueChanged.connect(lambda v: setattr(self.params, 'maxGen', v))
-        self.rprob.valueChanged.connect(lambda v: setattr(self.params, 'rprob', v / 100))
-        self.mprob.valueChanged.connect(lambda v: setattr(self.params, 'mprob', v / 100))
-        self.tsize.valueChanged.connect(lambda v: setattr(self.params, 'tsize', v))
-        self.threshold.valueChanged.connect(lambda v: setattr(self.params, 'threshold', v / 100))
+        self.psize.valueChanged.connect(lambda v: self.onParam('psize', v))
+        self.maxGen.valueChanged.connect(lambda v: self.onParam('maxGen', v))
+        self.rprob.valueChanged.connect(lambda v: self.onParam('rprob', v / 100))
+        self.minR.valueChanged.connect(lambda v: self.onParam('minR', v / 100))
+        self.maxR.valueChanged.connect(lambda v: self.onParam('maxR', v / 100))
+        self.mprob.valueChanged.connect(lambda v: self.onParam('mprob', v / 100))
+        self.tsize.valueChanged.connect(lambda v: self.onParam('tsize', v))
+        self.threshold.valueChanged.connect(lambda v: self.onParam('threshold', v / 100))
 
-        for sb in [self.rprob, self.mprob, self.threshold]:
+        for sb in [self.rprob, self.maxR, self.minR, self.mprob, self.threshold]:
             sb.setMinimum(0)
             sb.setMaximum(100)
         self.maxGen.setMaximum(10 ** 6)
         self.psize.setMaximum(10 ** 3)
-        self.tsize.setMaximum(10 ** 3)
 
         box = QGroupBox("Параметры")
         lt = QVBoxLayout()
-        for r, l in zip([self.psize, self.maxGen, self.rprob, self.mprob, self.tsize, self.threshold], labels):
+        for r, l in zip([self.psize, self.maxGen, self.rprob, self.minR, self.maxR,
+                         self.mprob, self.tsize, self.threshold], labels):
             r.valueChanged.emit(r.value())
             lt.addWidget(l)
             lt.addWidget(r)
@@ -202,10 +215,10 @@ class SettingsDialog(QDialog):
         self.recombinator = None
         self.mutationer = None
         self.oSelector = None
-        self.params = GA.Params()
+        self.params = Params()
 
         self.subResult = 0
-        sbLbl = QLabel('Промежуток отображения популяции (при вычислении результата)')
+        sbLbl = QLabel('Промежуток отображения популяции при вычислении результата')
         self.subResultSB = QSpinBox()
         self.subResultSB.setMaximum(10 ** 6)
         self.subResultSB.valueChanged.connect(lambda v: setattr(self, 'subResult', v))
@@ -236,6 +249,8 @@ class SettingsDialog(QDialog):
         self.tsize.setValue(2)
         self.threshold.setValue(50)
         self.subResultSB.setValue(5)
+        self.minR.setValue(0)
+        self.maxR.setValue(100)
 
         self.cfgFile = 'config'
         # Загрузка настроек из файла (если настрока есть - значние по умолчанию перезаписывается, иначе оно остаётся)
@@ -260,7 +275,7 @@ class SettingsDialog(QDialog):
                             val = int(val)
                         getattr(self, name).setValue(val)
         except Exception as e:
-            Logger.log(f'Ошибка чтения настроек: {e}\n')
+            Logger.log(f'Ошибка чтения настроек: {e}\n', LogLevel.Warn)
 
     def save(self) -> None:
         try:
@@ -276,8 +291,8 @@ class SettingsDialog(QDialog):
                         if getattr(self, op).isChecked():
                             f.write(f'{op}\n')
 
-                for sb in ['psize', 'maxGen', 'rprob', 'mprob', 'tsize', 'threshold', 'subResultSB']:
+                for sb in ['psize', 'maxGen', 'rprob', 'maxR', 'minR', 'mprob', 'tsize', 'threshold', 'subResultSB']:
                     f.write(f'{sb} {getattr(self, sb).value()}\n')
 
         except Exception as e:
-            Logger.log(f'Ошибка записи настроек: {e}\n')
+            Logger.log(f'Ошибка записи настроек: {e}\n', LogLevel.Warn)

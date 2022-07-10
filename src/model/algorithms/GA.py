@@ -3,32 +3,10 @@ from typing import Callable
 from src.model.core.Region import Region
 from src.model.core.Solution import Solution
 from src.model.core.Population import Population
+from src.model.algorithms.Params import Params
 
 
 class GA:
-    class Params:
-        def __init__(self):
-            # Настраиваемые параметры
-            self.psize: int = 0
-            self.maxGen: int = 0
-            self.rprob: float = 0
-            self.mprob: float = 0
-            self.tsize: int = 0
-            self.threshold: float = 0
-            # Генерируемые параметры
-            self.cstart: int = 0
-            self.csize: int = 0
-            self.mgen1: int = 0
-            self.mgen2: int = 0
-
-        def __str__(self):
-            return f'Размер популяции: {self.psize}\n' \
-                   f'Максимальное кол-во поколений: {self.maxGen}\n' \
-                   f'Вероятность кроссинговера: {self.rprob}\n' \
-                   f'Вероятность мутации: {self.mprob}\n' \
-                   f'Размер турнира (турнирный отбор): {self.tsize}\n' \
-                   f'Граница отбора (отбор усечением): {self.threshold}'
-
     def __init__(
             self,
             pSelector: Callable[[Population, GA], list[tuple[Solution, Solution]]] = None,
@@ -40,10 +18,11 @@ class GA:
         self.recombinator = recombinator
         self.mutationer = mutationer
         self.oSelector = oSelector
-        self.params = GA.Params()
+        self.params = Params()
         self.gen = 0
 
         self.reg: Region = None
+        self.N: int = 0
         self.population: Population = None
         self.parents: list[tuple[Solution, Solution]] = None
         self.children: Population = None
@@ -53,6 +32,7 @@ class GA:
 
     def start(self, reg: Region) -> None:
         self.reg = reg
+        self.N = len(reg)
         self.population = Population(self.reg, self.params.psize).normalized()
 
     def parentsSelect(self) -> None:

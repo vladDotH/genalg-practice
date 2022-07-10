@@ -2,8 +2,8 @@ from PyQt6.QtWidgets import *
 
 
 class ControlWidget(QGroupBox):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
         self.setTitle("Управление")
         lt = QVBoxLayout(self)
 

@@ -12,6 +12,8 @@ ga = Genitor(None, ox, swap, None)
 ga.params.psize = 10
 ga.params.rprob = 0.9
 ga.params.mprob = 0.05
+ga.params.minR = 0.4
+ga.params.maxR = 0.6
 ga.params.maxGen = 500
 ga.start(Region(towns))
 
@@ -33,7 +35,7 @@ print('Отобранные в следующую популяцию::', ga.offs
 ga.newPopulation()
 
 while ga.gen < ga.params.maxGen:
-    print(f'Популяция на {ga.gen} поколении:', ga.population.sorted().normalized(), '', sep='\n')
+    # print(f'Популяция на {ga.gen} поколении:', ga.population.sorted().normalized(), '', sep='\n')
     ga.nextGeneration()
 
 print(f'Популяция на {ga.gen} поколении:', ga.population.sorted().normalized(), sep='\n')

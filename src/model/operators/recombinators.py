@@ -12,8 +12,8 @@ def pmx(p1: Solution, p2: Solution, ga: GA) -> tuple[Solution, Solution]:
 
     N = len(p1)
 
-    if size > N or start < 0 or start > N - 1:
-        raise IndexError()
+    if size < 0 or size > N or start < 0 or start > N - 1:
+        raise ValueError('Incorrect start/size parameters')
 
     # Хромосомы сдвигаются так чтобы рекомбинируемая аллель была вначале (удобно для вычислений)
     p1, p2 = p1.shift(-start), p2.shift(-start)
@@ -47,8 +47,8 @@ def ox(p1: Solution, p2: Solution, ga: GA) -> tuple[Solution, Solution]:
 
     N = len(p1)
 
-    if size > N or start < 0 or start > N - 1:
-        raise IndexError()
+    if size < 0 or size > N or start < 0 or start > N - 1:
+        raise ValueError('Incorrect start/size parameters')
 
     # Хромосомы сдвигаются так чтобы рекомбинируемая аллель была вначале (удобно для вычислений)
     p1, p2, start = p1.shift(-start), p2.shift(-start), 0
@@ -79,12 +79,15 @@ def ox(p1: Solution, p2: Solution, ga: GA) -> tuple[Solution, Solution]:
     return (o1, o2)
 
 
-# Cycle crossover
+# Cycle Crossover
 def cx(p1: Solution, p2: Solution, ga: GA) -> tuple[Solution, Solution]:
     ga.checkParam('cstart')
     start = ga.params.cstart
 
     N = len(p1)
+
+    if start < 0 or start > N - 1:
+        raise ValueError('Incorrect start parameter')
 
     o1 = Solution(p1.reg, [-1] * N)
     o2 = Solution(p2.reg, [-1] * N)

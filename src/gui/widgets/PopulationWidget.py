@@ -11,8 +11,8 @@ from src.model.core import Population, Town
 
 
 class PopulationWidget(QGroupBox):
-    def __init__(self, name: str):
-        super().__init__()
+    def __init__(self, name: str, parent=None):
+        super().__init__(parent)
 
         self.list = QListWidget()
         self.canvas = FigureCanvas(Figure())

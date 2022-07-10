@@ -12,7 +12,9 @@ def panmixion(pop: Population, ga: GA = None) -> list[tuple[Solution, Solution]]
 # Турнирный отбор: N раз выбирается лучшая особь из случайных tsize выбранных, далее применяется панмиксия
 def tournament(pop: Population, ga: GA) -> list[tuple[Solution, Solution]]:
     ga.checkParam('tsize')
-    tsize = ga.params.tsize if ga.params.tsize <= ga.params.psize else ga.params.psize
+    tsize = ga.params.tsize
+    if tsize < 0 or tsize > ga.params.psize:
+        raise ValueError('Incorrect tournament size')
     return panmixion(
         Population(
             pop.reg,

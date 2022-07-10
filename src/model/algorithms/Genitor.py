@@ -22,7 +22,7 @@ class Genitor(GA):
     def crossover(self) -> None:
         self.children = Population(self.reg)
         self.params.cstart = random.randint(0, len(self.reg) - 1)
-        self.params.csize = random.randint(1, len(self.reg) - 2)
+        self.params.csize = random.randint(int(self.N * self.params.minR), int(self.N * self.params.maxR))
         self.children.append(
             self.recombinator(
                 self.parents[0][0], self.parents[0][1], self

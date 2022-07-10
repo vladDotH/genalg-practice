@@ -48,7 +48,7 @@ class Solution(list[int]):
         return Solution(self.reg, super().copy())
 
     def __str__(self) -> str:
-        return f'{{хромосома: {super().__repr__()}, ' + 'F: {:.10g}}}'.format(self.F())
+        return f'{{хромосома: {super().__repr__()}, ' + 'F: {:.5g}}}'.format(self.F())
 
     def __repr__(self) -> str:
         return str(self)
