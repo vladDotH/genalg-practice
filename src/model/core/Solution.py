@@ -27,13 +27,13 @@ class Solution(list[int]):
         self.__init__(reg)
         self.extend(lst)
 
-    # Целевая функция (сумма длин весов рёбер графа)
+    # Целевая функция (сумма длин весов рёбер подграфа)
     def F(self) -> float:
         return sum([self.reg.dists[self[i - 1]][self[i]] for i in range(len(self))])
 
     # Обратная к целевой функция (чем она больше тем приспособленне особь)
     def rF(self) -> float:
-        return np.tril(self.reg.dists).sum() / self.F() if self.F() != 0 else math.inf
+        return (np.tril(self.reg.dists).sum() / self.F()) if self.F() != 0 else math.inf
 
     # Рекурсивный сдвиг решения (цикла графа)
     def shift(self, n: int) -> Solution:

@@ -24,8 +24,10 @@ class ClassicGA(GA):
         self.children = Population(self.reg)
         for p in self.parents:
             if random.random() < self.params.rprob:
+                # Генерация начала аллели кроссинговера
                 self.params.cstart = random.randint(0, len(self.reg) - 1)
-                self.params.csize = random.randint(1, len(self.reg) - 2)
+                # Генерация размера аллели (от 1 до N-1, т.к. при значения 0 и N изменений не будет)
+                self.params.csize = random.randint(1, len(self.reg) - 1)
                 self.children.extend(self.recombinator(p[0], p[1], self))
             else:
                 self.children.extend(p)
@@ -40,9 +42,7 @@ class ClassicGA(GA):
                 self.mutChildren.append(c)
 
     def offspringSelect(self) -> None:
-        self.tempPop = Population(self.reg)
-        self.tempPop.extend(self.population)
-        self.tempPop.extend(self.mutChildren)
+        self.tempPop = Population(self.reg, self.population + self.mutChildren)
         self.offspring = self.oSelector(self.tempPop, self)
 
     def newPopulation(self) -> None:

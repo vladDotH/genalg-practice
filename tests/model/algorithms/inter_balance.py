@@ -8,9 +8,9 @@ X = [-6, -4, 0, 5, 6, 3, 0, -4]
 Y = [0, -4, -6, -3, 1.5, 5.2, 6.2, 4.2]
 towns = [Town(x, y) for x, y in zip(X, Y)]
 
-ga = InterBalance(None, pmx, swap, None)
-ga.params.psize = 5
-ga.params.rprob = 0.8
+ga = InterBalance(None, ox, swap, None)
+ga.params.psize = 10
+ga.params.rprob = 0.9
 ga.params.mprob = 0.1
 ga.params.maxGen = 10
 ga.start(Region(towns))

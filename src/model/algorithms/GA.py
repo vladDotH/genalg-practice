@@ -11,17 +11,17 @@ class GA:
     class Params:
         def __init__(self):
             # Настраиваемые параметры
-            self.psize = None
-            self.maxGen = None
-            self.rprob = None
-            self.mprob = None
-            self.tsize = None
-            self.threshold = None
+            self.psize: int = 0
+            self.maxGen: int = 0
+            self.rprob: float = 0
+            self.mprob: float = 0
+            self.tsize: int = 0
+            self.threshold: float = 0
             # Генерируемые параметры
-            self.cstart = None
-            self.csize = None
-            self.mgen1 = None
-            self.mgen2 = None
+            self.cstart: int = 0
+            self.csize: int = 0
+            self.mgen1: int = 0
+            self.mgen2: int = 0
 
         def __str__(self):
             return f'Размер популяции: {self.psize}\n' \
@@ -79,6 +79,7 @@ class GA:
         self.offspringSelect()
         self.newPopulation()
 
+    # Проверка существования параметра
     def checkParam(self, attr: str) -> None:
         if not hasattr(self.params, attr):
             raise AttributeError(f'GA has not parameter {attr}')

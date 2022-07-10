@@ -22,12 +22,12 @@ def insert(o: Solution, ga: GA) -> Solution:
 
     co = o.copy()
     if i != j:
-        dir = random.randint(0, 1)
-        if dir == 0:
+        dir = bool(random.randint(0, 1))
+        if dir:
             n = co[i]
             del co[i]
             co.insert(j - 1, n)
-        if dir == 1:
+        else:
             n = co[j]
             del co[j]
             co.insert(i + 1, n)

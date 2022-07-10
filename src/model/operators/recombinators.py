@@ -22,8 +22,8 @@ def pmx(p1: Solution, p2: Solution, ga: GA) -> tuple[Solution, Solution]:
     o2 = Solution(p2.reg, [-1] * N)
 
     # Обмен аллелями
-    o2[0:size] = p1[0:size]
-    o1[0:size] = p2[0:size]
+    o2[:size] = p1[:size]
+    o1[:size] = p2[:size]
 
     # Вставка остальных генов
     for p, o in zip([p1, p2], [o1, o2]):
@@ -57,8 +57,8 @@ def ox(p1: Solution, p2: Solution, ga: GA) -> tuple[Solution, Solution]:
     o2 = Solution(p2.reg, [-1] * N)
 
     # Обмен аллелями
-    o2[0:size] = p1[0:size]
-    o1[0:size] = p2[0:size]
+    o2[:size] = p1[:size]
+    o1[:size] = p2[:size]
 
     # Цепочки начинающиеся с гена сразу после аллели
     ps1 = p1.shift(-size)
