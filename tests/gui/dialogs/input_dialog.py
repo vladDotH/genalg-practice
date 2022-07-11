@@ -9,4 +9,4 @@ if not qapp:
 d = InputDialog()
 r = d.exec()
 print('Результат:', r)
-print('Введено:', d.towns)
+print('Введено:', d.reg)

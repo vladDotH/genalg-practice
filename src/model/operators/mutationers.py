@@ -1,6 +1,7 @@
 import random
 from src.model import Solution
 from src.model.algorithms.GA import GA
+from src.util import *
 
 
 # Мутация обменом (два гена меняются местами)
@@ -12,6 +13,8 @@ def swap(o: Solution, ga: GA) -> Solution:
     N = len(o)
     if i < 0 or j < 0 or i > N - 1 or j > N - 1:
         raise ValueError('Incorrect gens indices')
+
+    Logger.log(f'Мутация. Параметры: i = {i} ; j = {j}\n')
 
     co = o.copy()
     co[i], co[j] = co[j], co[i]
@@ -27,6 +30,8 @@ def insert(o: Solution, ga: GA) -> Solution:
     N = len(o)
     if i < 0 or j < 0 or i > N - 1 or j > N - 1:
         raise ValueError('Incorrect gens indices')
+
+    Logger.log(f'Мутация. Параметры: i = {i} ; j = {j}\n')
 
     co = o.copy()
     if i != j:
@@ -52,6 +57,8 @@ def inverse(o: Solution, ga: GA) -> Solution:
     N = len(o)
     if i < 0 or j < 0 or i > N - 1 or j > N - 1:
         raise ValueError('Incorrect gens indices')
+
+    Logger.log(f'Мутация. Параметры: i = {i} ; j = {j}\n')
 
     co = o.copy()
     co[i:j + 1] = reversed(co[i:j + 1])

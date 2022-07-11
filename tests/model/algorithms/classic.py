@@ -8,14 +8,14 @@ X = [-6, -4, 0, 5, 6, 3, 0, -4]
 Y = [0, -4, -6, -3, 1.5, 5.2, 6.2, 4.2]
 towns = [Town(x, y) for x, y in zip(X, Y)]
 
-ga = ClassicGA(panmixion, ox, inverse, trunc)
+ga = ClassicGA(roulette, ox, inverse, elite)
 ga.params.psize = 10
 ga.params.rprob = 0.90
 ga.params.mprob = 0.1
-ga.params.maxGen = 50
+ga.params.maxGen = 20
 ga.params.threshold = 0.5
-ga.params.minR = 0.4
-ga.params.maxR = 0.6
+ga.params.minR = 0.7
+ga.params.maxR = 0.9
 ga.start(Region(towns))
 print(ga)
 

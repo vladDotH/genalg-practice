@@ -4,8 +4,10 @@ from src.model.core.Region import Region
 from src.model.core.Solution import Solution
 from src.model.core.Population import Population
 from src.model.algorithms.Params import Params
+from src.util import *
 
 
+# Абстрактный ГА
 class GA:
     def __init__(
             self,
@@ -36,19 +38,20 @@ class GA:
         self.population = Population(self.reg, self.params.psize).normalized()
 
     def parentsSelect(self) -> None:
-        pass
+        Logger.log('Выбор родителей:')
 
     def crossover(self) -> None:
-        pass
+        Logger.log('Скрещивание:')
 
     def mutation(self) -> None:
-        pass
+        Logger.log('Мутации:')
 
     def offspringSelect(self) -> None:
-        pass
+        Logger.log('Отбор потомков:')
 
     def newPopulation(self) -> None:
         self.gen += 1
+        Logger.log(f'Новое поколение: {self.gen}\n')
 
     def nextGeneration(self) -> None:
         self.parentsSelect()

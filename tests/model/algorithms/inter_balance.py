@@ -12,8 +12,8 @@ ga = InterBalance(None, ox, swap, elite)
 ga.params.psize = 10
 ga.params.rprob = 0.9
 ga.params.mprob = 0.05
-ga.params.minR = 0.4
-ga.params.maxR = 0.6
+ga.params.minR = 0.5
+ga.params.maxR = 0.8
 ga.params.maxGen = 10
 ga.start(Region(towns))
 

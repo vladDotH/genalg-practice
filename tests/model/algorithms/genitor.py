@@ -8,13 +8,13 @@ X = [-6, -4, 0, 5, 6, 3, 0, -4]
 Y = [0, -4, -6, -3, 1.5, 5.2, 6.2, 4.2]
 towns = [Town(x, y) for x, y in zip(X, Y)]
 
-ga = Genitor(None, ox, swap, None)
+ga = Genitor(None, pmx, inverse, None)
 ga.params.psize = 10
-ga.params.rprob = 0.9
+ga.params.rprob = 0.95
 ga.params.mprob = 0.05
-ga.params.minR = 0.4
-ga.params.maxR = 0.6
-ga.params.maxGen = 500
+ga.params.minR = 0.2
+ga.params.maxR = 0.8
+ga.params.maxGen = 200
 ga.start(Region(towns))
 
 print('Города:', ga.reg, '\n')

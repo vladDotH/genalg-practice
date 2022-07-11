@@ -13,6 +13,9 @@ class Region(list[Town]):
             for j in range(i, N):
                 self.dists[i][j] = self.dists[j][i] = towns[i].dist(towns[j])
 
+        if self.dists.sum() == 0:
+            raise ArithmeticError('Region in one dot')
+
     def __str__(self) -> str:
         return f'Города: {super().__repr__()}\n' \
                f'Расстояния:\n' + \

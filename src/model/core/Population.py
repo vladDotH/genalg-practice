@@ -1,11 +1,11 @@
 from __future__ import annotations
-
 import numpy as np
 from multipledispatch import dispatch
 from src.model.core.Solution import Solution
 from src.model.core.Region import Region
 
 
+# Папуляция особей
 class Population(list[Solution]):
     # Стандартный конструктор (пустая популяция)
     @dispatch(Region)

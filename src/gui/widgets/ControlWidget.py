@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import *
 
 
+# Виджет кнопок управления
 class ControlWidget(QGroupBox):
     def __init__(self, parent=None):
         super().__init__(parent)

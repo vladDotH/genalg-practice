@@ -1,8 +1,9 @@
 from PyQt6.QtWidgets import *
-
 from src.model.core.Town import Town
+from src.model.core.Region import Region
 
 
+# Диалог ввода региона
 class InputDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -28,18 +29,26 @@ class InputDialog(QDialog):
         self.setLayout(lt)
 
         self.count.valueChanged.connect(self.table.setRowCount)
-        self.towns: list[Town] = []
+        self.count.setMinimum(2)
+        self.reg: Region = None
 
     def ret(self) -> None:
         i = 0
         try:
-            self.towns.clear()
+            towns = []
             for i in range(self.table.rowCount()):
                 x, y = [self.table.item(i, j) for j in [0, 1]]
                 if x is None or y is None:
                     raise ValueError()
-                self.towns.append(Town(float(x.text()), float(y.text())))
-
+                towns.append(Town(float(x.text()), float(y.text())))
+            self.reg = Region(towns)
+        except ArithmeticError:
+            QMessageBox(
+                QMessageBox.Icon(QMessageBox.Icon.Critical),
+                'Ошибка',
+                f'Некорректный регион'
+            ).exec()
+            return
         except (ValueError, TypeError):
             QMessageBox(
                 QMessageBox.Icon(QMessageBox.Icon.Critical),

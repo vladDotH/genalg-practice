@@ -71,7 +71,8 @@ class PopulationWidget(QGroupBox):
                 textcoords="offset points", xytext=(4, 4)
             )
         self.line = None
-        self.list.setCurrentRow(0)
+
+        # Выделение лучшей особи
         m = pop.index(pop.min())
         self.list.item(m).setBackground(QColor('lime'))
         self.list.setCurrentRow(m)

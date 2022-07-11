@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import *
 from src.util.Logger import *
 
 
+# Виджет вывода логов
 class LoggerWidget(QGroupBox):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -13,10 +14,16 @@ class LoggerWidget(QGroupBox):
         self.debug = QCheckBox(LogLevel.Debug.name)
         self.info = QCheckBox(LogLevel.Info.name)
         self.warn = QCheckBox(LogLevel.Warn.name)
+
+        self.debug.toggled.connect(lambda s: self.levelToggled(0, s))
+        self.info.toggled.connect(lambda s: self.levelToggled(1, s))
+        self.warn.toggled.connect(lambda s: self.levelToggled(2, s))
+
         for i, w in zip(list(range(3)), [self.debug, self.info, self.warn]):
             boxlt.addWidget(w)
-            w.toggled.connect(lambda s: self.levelToggled(i, s))
-            w.toggle()
+
+        self.info.toggle()
+        self.warn.toggle()
         box.setLayout(boxlt)
 
         lt = QHBoxLayout(self)

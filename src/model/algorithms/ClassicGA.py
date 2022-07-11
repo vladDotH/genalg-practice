@@ -6,6 +6,7 @@ from src.model.core.Region import Region
 from src.model.core.Solution import Solution
 
 
+# Классический ГА
 class ClassicGA(GA):
     def __init__(self, pSelector: Callable[[Population, GA], list[tuple[Solution, Solution]]] = None,
                  recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]] = None,
@@ -17,9 +18,11 @@ class ClassicGA(GA):
         super().start(reg)
 
     def parentsSelect(self) -> None:
+        super().parentsSelect()
         self.parents = self.pSelector(self.population, self)
 
     def crossover(self) -> None:
+        super().crossover()
         self.children = Population(self.reg)
         for p in self.parents:
             if random.random() < self.params.rprob:
@@ -32,6 +35,7 @@ class ClassicGA(GA):
                 self.children.extend(p)
 
     def mutation(self) -> None:
+        super().mutation()
         self.mutChildren = Population(self.reg)
         for c in self.children:
             if random.random() < self.params.mprob:
@@ -41,6 +45,7 @@ class ClassicGA(GA):
                 self.mutChildren.append(c)
 
     def offspringSelect(self) -> None:
+        super().offspringSelect()
         self.tempPop = Population(self.reg, self.population + self.mutChildren)
         self.offspring = self.oSelector(self.tempPop, self)
 

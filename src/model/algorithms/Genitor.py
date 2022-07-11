@@ -6,6 +6,7 @@ from src.model.core.Region import Region
 from src.model.core.Solution import Solution
 
 
+# ГА-Генитор
 class Genitor(GA):
     def __init__(self, pSelector: Callable[[Population, GA], list[tuple[Solution, Solution]]] = None,
                  recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]] = None,
@@ -17,9 +18,11 @@ class Genitor(GA):
         super().start(reg)
 
     def parentsSelect(self) -> None:
+        super().parentsSelect()
         self.parents = [tuple(Solution(self.reg, i) for i in random.sample(self.population, 2))]
 
     def crossover(self) -> None:
+        super().crossover()
         self.children = Population(self.reg)
         self.params.cstart = random.randint(0, len(self.reg) - 1)
         self.params.csize = random.randint(int(self.N * self.params.minR), int(self.N * self.params.maxR))
@@ -30,6 +33,7 @@ class Genitor(GA):
         )
 
     def mutation(self) -> None:
+        super().mutation()
         self.mutChildren = Population(self.reg)
         c = self.children[0]
         if random.random() < self.params.mprob:
@@ -39,6 +43,7 @@ class Genitor(GA):
             self.mutChildren.append(c)
 
     def offspringSelect(self) -> None:
+        super().offspringSelect()
         self.offspring = Population(self.reg)
         self.offspring.extend(self.population)
         self.offspring[self.offspring.index(self.offspring.max())] = self.mutChildren[0]

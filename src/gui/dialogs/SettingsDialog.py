@@ -1,11 +1,11 @@
 from typing import Type, Callable
 from PyQt6.QtWidgets import *
-
 from src.model import *
 from src.util import Logger
 from src.util import LogLevel
 
 
+# Диалог настроек параметров ГА
 class SettingsDialog(QDialog):
     # Обработка кнопок выбора ГА
     def _onGA(self, state: bool, gaType: Type[GA]) -> None:
@@ -80,6 +80,9 @@ class SettingsDialog(QDialog):
 
     # Обработка кнопок выбора оператора рекомбинации
     def _onRCMB(self, state: bool, recombinator: Callable[[Solution, Solution, GA], tuple[Solution, Solution]]) -> None:
+        if recombinator is cx:
+            for m in [self.minR, self.maxR]:
+                m.setEnabled(not state)
         if state:
             self.recombinator = recombinator
 
